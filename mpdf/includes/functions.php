@@ -1,24 +1,5 @@
 <?php
 
-
-// mPDF 6
-// Function only available PHP >=5.5.0
-if(!function_exists('imagepalettetotruecolor')) {
-    function imagepalettetotruecolor(&$src) {
-        if(imageistruecolor($src)) {
-            return(true);
-        }
-        $dst = imagecreatetruecolor(imagesx($src), imagesy($src));
-
-        imagecopy($dst, $src, 0, 0, 0, 0, imagesx($src), imagesy($src));
-        imagedestroy($src);
-
-        $src = $dst;
-
-        return(true);
-    }
-}
-
 // mPDF 5.7
 // Replace a section of an array with the elements in reverse
 function array_splice_reverse(&$arr, $offset, $length) {
@@ -27,6 +8,7 @@ function array_splice_reverse(&$arr, $offset, $length) {
 }
 
 
+// mPDF 5.6.23
 function array_insert(&$array, $value, $offset) {
 	if (is_array($array)) {
 		$array  = array_values($array);
@@ -44,8 +26,8 @@ function array_insert(&$array, $value, $offset) {
 	return count($array);
 }
 
-// mPDF 5.7.4 URLs
-function urldecode_parts($url) {
+function urlencode_part($url) {	// mPDF 5.6.02
+	if (!preg_match('/^[a-z]+:\/\//i',$url)) { return $url; }
 	$file=$url;
 	$query='';
 	if (preg_match('/[?]/',$url)) {
@@ -53,8 +35,7 @@ function urldecode_parts($url) {
 		$file=$bits[0];
 		$query='?'.$bits[1];
 	}
-	$file = rawurldecode($file);
-	$query = urldecode($query);
+	$file = str_replace(array(" ","!","$","&","'","(",")","*","+",",",";","="),array("%20","%21","%24","%26","%27","%28","%29","%2A","%2B","%2C","%3B","%3D"),$file);
 	return $file.$query;
 }
 
@@ -143,7 +124,6 @@ function codeHex2utf_callback($matches) {
 function codeHex2utf_lo_callback($matches) {
 	return codeHex2utf($matches[1], 1);
 }
-
 
 if(!function_exists('code2utf')){ 
   function code2utf($num,$lo=true){

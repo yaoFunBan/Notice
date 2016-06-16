@@ -382,29 +382,35 @@
                                             <label>วันรื้อถอน</label>
                                             <input class="form-control" name="outevent" id="outevent" value="<?php echo $row[6]?>">
                                         </div>
+                                        
                                     <?php
                                         $sql_sel = "SELECT * FROM local_notice";
                                         $result = $conn->query($sql_sel);
                                         
-                                        function selNotice($val){
-                                            $not_sel = explode("_", $row[2]);
-                                            for($j=0;$j<count($not_sel);$j++){
-                                                if($not_sel[$j] == $val){
-                                                    echo "selected";
-                                                }
-                                            }
-                                        }
+//                                            echo '<script>';
+//                                            echo 'var name = ' . json_encode($row[2]) . ';';
+////                                            echo 'var dataarray=name.split("_");';
+//                                            echo '$.each(values.split("_"), function(i,e){';
+//                                            echo '$("#sel_notice option[value="e"]").prop("selected", true);';
+//                                            echo '});';
+////                                            echo 'console.log(dataarray.length);';
+//                                            echo '</script>';
                                     ?>
                                         <div class="form-group">
                                              <label class="control-label" for="inputSuccess">เลือกป้าย</label>
                                         </div>
                                         <div class="form-group has-success">
-                                            <select id="sel_notice"  multiple="multiple" name="sel_notice[]">
+                                            <select id="sel_notice" class="sel_notice"  multiple="multiple">
                                                 <?php
                                                     $i = 1;
                                                     while ($rows = $result->fetch_array()){
-                                                        echo '<option'.selNotice($rows[0]).'' 
-                                                        . ' value="'.$rows[0].'">'.$i.'.'.$rows[1].'</option>';
+                                                        foreach ($not_sel as $val){
+                                                            $sel = '';
+                                                            if(in_array($val, $rows[0])){
+                                                                $sel = ' selected="selected" ';
+                                                            }
+                                                        }
+                                                        echo '<option '.$sel.' value="'.$rows[0].'">'.$i.'.'.$rows[1].'</option>';
                                                         $i++;
                                                     }
                                                 ?>
@@ -412,7 +418,9 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="fileinput fileinput-new" data-provides="fileinput">
-                                                <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 300px; height: 150px;"></div>
+                                                <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 300px; height: 150px;">
+                                                    <?php echo '<img  src="'.$row[7].'">'?>
+                                                </div>
                                                 <div>
                                                   <span class="btn btn-default btn-file">
                                                       <span class="fileinput-new">เลือกรูปป้าย</span>
@@ -424,11 +432,13 @@
                                         </div>
                                         <div class="form-group">
                                             <label>รายละเอียด</label>
-                                            <textarea class="form-control" id="newsDetail" name="newsDetail" style="resize: none; width: 100; height: 100px;"></textarea>
+                                            <textarea class="form-control" id="newsDetail" name="newsDetail" style="resize: none; width: 100; height: 100px;">
+                                                <?php echo $row[8]?>
+                                            </textarea>
                                         </div>
                                         <div class="form-group">
                                            <button type="button" class="btn btn-success" name="btn_save" id="btn_upload"
-                                                   value="upload" onclick="insertEvent()">
+                                                   value="upload" onclick="updateEvent()">
                                                 บันทึก
                                             </button>
                                         </div>
@@ -473,6 +483,20 @@
 </script>
 
 <script>
+    var name =  "<?php Print($row[2]);?>";
+    var arr_name = name.split("_"); 
+//    for(var i=0;i<arr_name.length;i++){
+//        $("#sel_notice").val(arr_name[i])
+////        console.log(arr_name[i]);
+//    }
+    for(var i=0;i<arr_name.length;i++){
+        $("#sel_notice > option").filter( function() {
+            return $(this).val() == arr_name[i]; 
+        }).prop('selected', true); //use .prop, not .attr
+    }
+</script>
+
+<script>
     $(document).ready(function(){
         $("#txtFromDate").datepicker({
             numberOfMonths: 2,
@@ -498,6 +522,7 @@
         });
     });
     
+    
 </script>
 <script type="text/javascript">
     $(function () {
@@ -512,7 +537,8 @@
 </script>
 
 <script type="text/javascript">
-        function insertEvent(){
+        function updateEvent(){
+            var eId = "<?php Print($eId)?>";
             var Ename = $("#naem_event").val();
             var Estart = $("#txtFromDate").val();
             var Eend = $("#txtToDate").val();
@@ -524,29 +550,61 @@
                 return [value];
             });
             var json_arr = JSON.stringify(array);
+            if(document.getElementById("pNotice").files.length == 0 ){
+               var formData = new FormData();
+               formData.append('Eid', eId);
+               formData.append('Ename', Ename);
+               formData.append('Estart', Estart);
+               formData.append('Eend', Eend);
+               formData.append('Eout', Eout);
+               formData.append('Edetail', Edetail);
+               formData.append('Enotice', json_arr);
+               formData.append('todo',"update_notice_n");
+
+               $.ajax({
+                   url: 'manageEvent.php',
+                   type: 'post',
+                   data: formData,
+                   contentType: false,       // The content type used when sending data to the server.
+                   cache: false,
+                   processData: false,
+                   success: function (data) {
+                        document.getElementById("show").innerHTML = data;
+                        setTimeout(function (){
+                            window.location.href = "Res_Form.php";
+                        },2000);
+                  }
+                });   
+            }
             
-            var file = fileInput.files[0];
-            var formData = new FormData();
-            formData.append('Ename', Ename);
-            formData.append('Estart', Estart);
-            formData.append('Eend', Eend);
-            formData.append('Eout', Eout);
-            formData.append('Edetail', Edetail);
-            formData.append('Enotice', json_arr);
-            formData.append('Eimage', file);
-            formData.append('todo',"resv_notice")
-            
-            $.ajax({
-                url: 'manageEvent.php',
-                type: 'post',
-                data: formData,
-                contentType: false,       // The content type used when sending data to the server.
-                cache: false,
-                processData: false,
-                success: function (data) {
-                      document.getElementById("show").innerHTML = data;
-               }
-             });
+            if(document.getElementById("pNotice").files.length != 0 ){
+               var file = fileInput.files[0];
+               var formData = new FormData();
+               formData.append('Eid', eId);
+               formData.append('Ename', Ename);
+               formData.append('Estart', Estart);
+               formData.append('Eend', Eend);
+               formData.append('Eout', Eout);
+               formData.append('Edetail', Edetail);
+               formData.append('Enotice', json_arr);
+               formData.append('Eimage', file);
+               formData.append('todo',"update_notice");
+
+               $.ajax({
+                   url: 'manageEvent.php',
+                   type: 'post',
+                   data: formData,
+                   contentType: false,       // The content type used when sending data to the server.
+                   cache: false,
+                   processData: false,
+                   success: function (data) {
+                        setTimeout(function (){
+                          document.location.href = "Res_Form.php";
+                        },2000);
+                         document.getElementById("show").innerHTML = data;
+                  }
+                }); 
+            }
         }
     </script>
 

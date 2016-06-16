@@ -1,46 +1,49 @@
 <?php
  include "conn.php";
+ require_once './mpdf/mpdf.php';
+ 
+ $eId = 1; 
+ $sql_sel = "SELECT * FROM profile WHERE user_id = 1";
+ $result = $conn->query($sql_sel);
+ $row = $result->fetch_array();
+
 ?>
 
 <!DOCTYPE html>
+
 <html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>แบบคำขออนุญาตปิดประกาศ ติดตั้งป้ายประชาสัมพันธ์ ภายในมหาวิทยาลัยขอนแก่น</title>
-    <link href="assets/plugins/bootstrap/bootstrap.css" rel="stylesheet"/>
-    
-    
+    <!--<link href="assets/plugins/bootstrap/bootstrap.css" rel="stylesheet"/>-->
+    <!--<link href="assets/css/print.css" rel="stylesheet"/>-->
 </head>
+<?php
+ ob_start(); 
+?>
 <body>
 <!--  wrapper -->
 <tocentry level="1" content="The Middle Ages"><bookmark content="The Middle Ages" /></tocentry>
     <div class="container">
          <div class="row">
-            <div class="pull-right">เลขที่......./.......</div>
+             <div style="text-align: right;">เลขที่......./.......</div>
          </div>
         <div class="row">
             <div class="col-lg-12" style="text-align: center">
                 <label><h4>แบบคำขออนุญาตปิดประกาศ ติดตั้งป้ายประชาสัมพันธ์ ภายในมหาวิทยาลัยขอนแก่น</h4></label>
             </div>
         </div>
+        <br>
         <div class="row">
-            <label><span id="hStory">เรื่อง</span>&nbsp&nbsp ขออนุญาตติดตั้งป้ายประชาสัมพันธ์ ภายในมหาวิทยาลัยขอนแก่น</label>
+            <label id="hStory">เรื่อง</label> <label>ขออนุญาตติดตั้งป้ายประชาสัมพันธ์ ภายในมหาวิทยาลัยขอนแก่น</label>
         </div>
         <div class="row">
-            <label><span id="hStory">เรียน</span>&nbsp&nbsp ผู้ช่วยอธิการบดีฝ่ายสื่อสารองค์กร (ผ่านหัวหน้างานบริหารงานทั่วไป)</label>
+            <label><span id="hStory">เรียน</span> ผู้ช่วยอธิการบดีฝ่ายสื่อสารองค์กร (ผ่านหัวหน้างานบริหารงานทั่วไป)</label>
         </div>
-        <div class="row">
-            <label><span id="hStory">ข้าพเจ้า</span>...............................................................................................................................................................................................................................................................................</label>
-        </div>
-        <div class="row">
-            <label><span id="hStory">หน่วยงาน</span>......................................................................................................................................
-                <span id="hStory">เบอร์โทร</span>.......................................................................................................................</label>
-        </div>
+            <label><span id="hStory">ข้าพเจ้า</span>...........<?php echo $row[1].'..'.$row[2]?>.....................</label>
+            <label><span id="hStory">หน่วยงาน</span>..........<?php echo $row[3]?>......<span id="hStory">เบอร์โทร</span>.....<?php echo $row[4]?>.....</label>
         <div class="form-group">
-            <table class="table table-bordered">
-                <col width="250">
-                <col width="100">
+            <table class="table table-bordered" >
                 <thead>
                     <tr>
                         <th class="text-center">ประเภทสื่อที่ขออนุญาต</th>
@@ -49,7 +52,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>
+                        <td style="padding: 2%">
                            <div class="form-group">
                                 <div class="checkbox">
                                     <label>
@@ -64,270 +67,339 @@
                             </div>
                             <div class="form-group">
                                 <label>
-                                    1. ขนาด กว้าง............6..............เมตร ยาว..........2.4...........เมตร   จำนวน.............จุด
+                                    1. ขนาด กว้าง............6..............เมตร ยาว..........2.4...........เมตร<br>จำนวน.............จุด
                                 </label>
                             </div>
                         </td>
-                        <td></td>
+                        <td style="padding: 2%"></td>
                     </tr>
                     <tr>
-                        <td>
+                        <td style="padding: 2%">
                             <div class="form-group">
                                 <label>
-                                    2. ขนาด กว้าง............8.4..............เมตร ยาว..........3.6...........เมตร   จำนวน.............จุด
+                                    2. ขนาด กว้าง............8.4...........เมตร ยาว..........3.6...........เมตร<br>จำนวน.............จุด
                                 </label>
                             </div>
                         </td>
-                        <td></td>
+                        <td style="padding: 2%"></td>
                     </tr>
                     <tr>
-                        <td>
+                        <td style="padding: 2%">
                             <div class="form-group">
                                 <label>
-                                    3. ขนาด กว้าง............5..............เมตร ยาว..........2.4...........เมตร   จำนวน.............จุด
+                                    3. ขนาด กว้าง............5..............เมตร ยาว..........2.4...........เมตร<br>จำนวน.............จุด
                                 </label>
                             </div>
                         </td>
-                        <td></td>
+                        <td style="padding: 2%"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 2%">
+                            <div class="form-group">
+                                <label>
+                                    <img src="assets/img/unchecked_checkbox.png" width="15" height="15"> <label>อิ่นๆ.......................................................................................</label><br>
+                                </label>
+                                <div class="form-group">
+                                    <label>
+                                    ขนาด กว้าง...............................เมตร ยาว.............................เมตร<br>จำนวน.................จุด
+                                    </label>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="padding: 2%"></td>
                     </tr>
                 </tbody>
             </table>
             <div class="form-group">
                 <h4>สำหรับกิจกรรม</h4>
-                <label>..............................................................................................................................................................................................................(แนบข้อความและแบบป้ายประกอบการขออนุญาต)</label>
+                <label>......................................................................................(แนบข้อความและแบบป้ายประกอบการขออนุญาต)</label>
             </div>
             <div class="form-group">
-                <span id="hStory">ตั้งแต่</span>&nbsp <label>วันที่...............................เดือน.....................................................................พ.ศ................&nbspถึงวันที่...............................เดือน................................................................พ.ศ.............</label>
+                <span id="hStory">ตั้งแต่</span> <label>วันที่............เดือน.......................พ.ศ.................ถึง วันที่............เดือน.......................พ.ศ..................</label>
             </div>
             <div class="form-group">
-                <span id="hStory">โดยจะทำการรื้อถอนให้แล้วเสร็จใน </span>&nbsp <label>วันที่...............................เดือน.....................................................................พ.ศ................</label>
+                <span id="hStory">โดยจะทำการรื้อถอนให้แล้วเสร็จใน </span> <label>วันที่.............................เดือน.............................พ.ศ.............................</label>
             </div>
-            <div class="form-group">
-                <label style="text-indent: 15%">กรณีป้ายโฆษณาที่ติดตั้งไว้ได้ก่อให้เกิดความเสียหายต่อชีวิต ร่างกาย หรือทรัพย์สินของบุคคลอื่นไม่ว่ากรณีใดๆก็ตาม   ผู้ได้รับอนุญาตจะต้องรับผิดชอบต่อความเสียหายที่เกิดขึ้นนั้น
-                    ข้าพเจ้ายินดีปฏิบัติตามระเบียบ ประกาศ และเงื่อนไขของมหาวิทยาลัยขอนแก่นทุกประการ
+            <div class="form-group" style="text-indent: 15%">
+                <label>กรณีป้ายโฆษณาที่ติดตั้งไว้ได้ก่อให้เกิดความเสียหายต่อชีวิต ร่างกาย หรือทรัพย์สินของบุคคล<br>อื่นไม่ว่ากรณีใดๆก็ตาม   ผู้ได้รับอนุญาตจะต้องรับผิดชอบต่อความเสียหายที่เกิดขึ้นนั้น</label>
             </div>
-            <div class="form-group">
-                <label style="text-indent: 15%">จึงเรียนมาเพื่อโปรดพิจารณาอนุญาต   จักขอบคุณยิ่ง</label>
+            <div class="form-group" style="text-indent: 15%">
+                <label>ข้าพเจ้ายินดีปฏิบัติตามระเบียบ ประกาศ และเงื่อนไขของมหาวิทยาลัยขอนแก่นทุกประการ</label>
             </div>
+            <div class="form-group" style="text-indent: 15%">
+                <label>จึงเรียนมาเพื่อโปรดพิจารณาอนุญาต   จักขอบคุณยิ่ง</label>
+            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <div class="row" style="text-align: right;">
+                <label>ลงชื่อ..................................................................ผู้ขออนุญาติ</label>
+            </div>
+            <div class="row" style="text-align: right;">
+                <label>(............................................................................................)</label>
+            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
             <div class="row">
-                <label class="pull-right">ลงชื่อ..................................................................ผู้ขออนุญาติ</label>
-            </div>
-            <div class="row">
-                <label class="pull-right">(............................................................................................)</label>
-            </div>
-            <tocentry level="2" content="The turn of the first millennium"><bookmark content="The turn of the first millennium" /></tocentry>
-            <div class="row">
-                <label id="hStory">หมายเหตุ&nbsp&nbspระยะเวลาการขอติดตั้งแต่ละครั้ง / กิจกรรม ไม่เกิน  7 วัน</label>
+                <label id="hStory">หมายเหตุ ระยะเวลาการขอติดตั้งแต่ละครั้ง / กิจกรรม ไม่เกิน  7 วัน</label>
             </div>
             <div class="row">
                 <table class="table table-bordered">
-                    <td style="padding: 2%">
-                                <label id="hStory">1.เรียน&nbspผู้ช่วยอธิการบดีฝ่ายกิจการทั่วไป</label>
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <tbody>
+                        <tr>
+                            <td style="padding: 2%">
+                                <div class="row"><label id="hStory">1.เรียน ผู้ช่วยอธิการบดี<br>ฝ่ายกิจการทั่วไป</label></div>
                                 <div class="row">
-                                    <label>งานประชาสัมพันธ์ได้ตรวจสอบ ดังนี้ </label>
+                                    <label>งานประชาสัมพันธ์ได้<br>ตรวจสอบ ดังนี้ </label>
                                 </div>
                                 <ol>
                                     <li>
-                                        <label id="hStory">ประเภทการขออนุญาต</label>
-                                        <div class="form-group">
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" value=""> กิจกรรมภายในและบริการชุมชน                       
-                                                </label>
-                                            </div>
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" value=""> กิจกรรมที่เกี่ยวข้องกับเชิงพาณิชย์                       
-                                                </label>
-                                            </div>
-                                        </div>
+                                        <label id="hStory">ประเภทการขอ<br>อนุญาต</label>
+                                        <br>
+                                        <br>
+                                        <img src="assets/img/unchecked_checkbox.png" width="15" width="15"/> กิจกรรมภายในและ<br>บริการชุมชน<br>  
+                                        <img src="assets/img/unchecked_checkbox.png" width="15" width="15"/> กิจกรรมที่เกี่ยวข้องกับ<br>เชิงพาณิชย์
                                     </li>
+                                    <br>
                                     <li>
                                         <label id="hStory">ค่าใช้จ่ายในการติดตั้ง</label>
-                                        <div class="form-group">
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" value=""> ประเมินค่าธรรมเนียม ราคา........................บาท                       
-                                                </label>
-                                            </div>
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" value=""> ค่าประกันการติดตั้ง ........................บาท                       
-                                                </label>
-                                            </div>
-                                        </div>
+                                        <br>
+                                        <br>
+                                        <img src="assets/img/unchecked_checkbox.png" width="15" width="15"/> ประเมินค่าธรรมเนียม <br>ราคา........................บาท<br>
+                                        <img src="assets/img/unchecked_checkbox.png" width="15" width="15"/> ค่าประกันการติดตั้ง <br>...............................บาท
                                     </li>
                                 </ol>
-                                <div class="row" style="text-align: center;">
+                                <div class="row" id="intable">
                                     <label>จึงเรียนมาเพื่อโปรดพิจารณา</label>
                                 </div>
-                                
-                                <div class="row">
-                                    <label>ลงชื่อ..................…………................</label>
+                                <div class="row" id="intable">
+                                    <label>ลงชื่อ..................………….......</label>
                                 </div>
-                                <div class="row" style="text-align: center;">
+                                <div class="row" id="intable">
                                     <label>(นางสาวชลวภรณ์  ชูกลิ่น)</label>
                                 </div>
-                                <div class="row" style="text-align: center;">
+                                <div class="row">
                                     <label>ผู้ตรวจสอบ</label>
                                 </div>
                                 <br>
-                                <div class="row">
-                                    <label>วันที่.................../.................../.............</label>
+                                <div class="row" id="intable">
+                                    <label>วันที่........../........../..........</label>
                                 </div>
                                 <br>
                                 <br>
-                                <div class="row">
-                                    <label>ลงชื่อ..................…………................</label>
+                                <div class="row" id="intable">
+                                    <label>ลงชื่อ..................………….......</label>
                                 </div>
-                                <div class="row" style="text-align: center;">
+                                <div class="row" id="intable">
                                     <label>(นางสถาพร นาวานุเคราะห์)</label>
                                 </div>
+                                <div class="row" id="intable">
+                                   <label>หัวหน้างานบริหารงานทั่วไป</label>
+                                </div>
+                                <br>
                                 <div class="row" style="text-align: center;">
-                                    <label>หัวหน้างานบริหารงานทั่วไป</label>
+                                    <label>วันที่........../........../..........</label>
                                 </div>
                                 <br>
-                                <div class="row">
-                                    <label>วันที่.................../.................../.............</label>
-                                </div>
-                    </td>
-                    <td style="padding: 2%">
-                        <label id="hStory">2.เรียน&nbspหัวหน้างานบริหารงานทั่วไป</label>
-                        <div class="row">
-                           <label>เพื่อโปรดดำเนินการ</label>
-                        </div>
-                            <div class="form-group">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" value=""> <span style="text-decoration:underline">อนุญาต</span> ดำเนินการตามเสนอ โดย                       
-                                    </label>
-                                </div>
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" value=""> ยกเว้นค่าธรรมเนียม                       
-                                    </label>
-                                </div>
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" value=""> ลดหย่อนค่าธรรมเนียมคงเหลือ ............................บาท                       
-                                    </label>
-                                </div>
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" value=""> ตามราคาประเมิน                        
-                                    </label>
-                                </div>
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" value=""> <span style="text-decoration:underline">ไม่อนุญาต</span> เนื่องจาก                      
-                                    </label>
-                                </div>
-                                <label>
-                                    .............................................................</br>
-                                    .............................................................</br>  
-                                    .............................................................</br>  
-                                    .............................................................</br>  
-                                    .............................................................</br>  
-                                    .............................................................</br>  
-                                    .............................................................</br>  
-                                    .............................................................</br>  
-                                    .............................................................</br>  
-                                    .............................................................</br>
-                                    
-                                </label>
                                 <br>
                                 <br>
-                                <div class="row">
-                                    <label>ลงชื่อ..................…………...........................</label>
-                                </div>
-                                <div class="row" style="text-align: center;">
-                                    <label>(นางสถาพร นาวานุเคราะห์)</label>
-                                </div>
-                                <div class="row" style="text-align: center;">
-                                    <label>หัวหน้างานบริหารงานทั่วไป</label>
-                                </div>
                                 <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                            </td>
+                            <td style="padding: 2%">
+                                <div class="row"><label id="hStory">2.เรียน หัวหน้างาน<br>บริหารงานทั่วไป</label></div>
                                 <div class="row">
-                                    <label>วันที่.................../.................../.....................</label>
-                                </div>
-                            </div>
-                    </td>
-                    <td style="padding: 2%">
-                        <label id="hStory">3.(ในกรณีที่ต้องจ่ายค่าธรรมเนียม)  เรียน ผู้ช่วยอธิการบดีสื่อสารองค์กร</label>
-                                <div class="row">
-                                    <label>ผู้ขออนุญาตได้ดำเนินการจ่ายค่าธรรมเนียมแล้วตามรายละเอียด ดังนี้</label>
-                                </div>
-                                <div class="form-group">
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" value=""> ชำระค่าธรรมเนียมตามใบเสร็จรับเงิน<br>
-                                            เล่มที่ .....................เลขที่.......................
-                                            จำนวนเงิน..........................................บาท          
-                                        </label>
-                                    </div>
-                                    <br>
-                                    <div class="row" style="text-align: center;">
-                                        <label>เพื่อโปรดทราบ และดำเนินการต่อไป</label>
-                                    </div>
-                                    <br>
+                                    <label>เพื่อโปรดดำเนินการ</label>
                                     <div class="row">
-                                         <label>ลงชื่อ..................................................................</label>
+                                        <img src="assets/img/unchecked_checkbox.png" width="15" width="15"/> อนุญาต ดำเนินการ<br>ตามเสนอ โดย 
                                     </div>
-                                    <div class="row" style="text-align: center;">
-                                        <label>(.........................................................................)</label>
-                                    </div>
-                                    <div class="row" style="text-align: center;">
-                                        <label>.........................................................................</label>
-                                    </div>
-                                    <br>
                                     <div class="row">
-                                        <label>วันที่.................../.................../.....................</label>
+                                        <img src="assets/img/unchecked_checkbox.png" width="15" width="15"/> ยกเว้นค่าธรรมเนียม
                                     </div>
-                                </div>
-                    </td>
-                    <td style="padding: 2%">
-                                <label id="hStory">4.เรียน หัวหน้างานรักษาความปลอดภัย</label>
-                                <div class="row">
-                                    <label>ผู้ขออนุญาตได้ดำเนินการตามผลการพิจารณา ดังนี้</label>
-                                </div>
-                                <div class="form-group">
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" value=""> ชำระค่าธรรมเนียมตามใบเสร็จรับเงิน <br>เล่มที่ .....................เลขที่....................
-         
-                                        </label>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" value=""> ชำระค่าประกันการติดตั้งตามใบเสร็จรับเงิน เล่มที่ ......................เลขที่.................
-         
-                                        </label>
-                                    </div>
-                                    <br>
-                                    <div class="row" style="text-align: center;">
-                                        <label>เพื่อโปรดทราบ และดำเนินการต่อไป</label>
-                                    </div>
-                                    <br>
                                     <div class="row">
-                                         <label>ลงชื่อ..................................................................</label>
+                                        <img src="assets/img/unchecked_checkbox.png" width="15" width="15"/> ลดหย่อนค่าธรรมเนียม<br>คงเหลือ......................บาท
                                     </div>
-                                    <div class="row" style="text-align: center;">
+                                    <div class="row">
+                                        <img src="assets/img/unchecked_checkbox.png" width="15" width="15"/> ตามราคาประเมิน
+                                    </div>
+                                    <div class="row">
+                                        <img src="assets/img/unchecked_checkbox.png" width="15" width="15"/> ไม่อนุญาต เนื่องจาก
+                                    </div>
+                                    <p>..............................................<br>
+                                    ..............................................<br>
+                                    ..............................................<br>
+                                    ..............................................<br>
+                                    ..............................................<br>
+                                    ..............................................<br>
+                                    ..............................................<br>
+                                    ..............................................<br>
+                                    ..............................................<br>
+                                    ..............................................<br>
+                                    ..............................................<br>
+                                    ..............................................<br>
+                                    ..............................................<br>
+                                    ..............................................<br>
+                                    ..............................................<br>
+                                    </p>
+                                    <br>
+                                    <div class="row" id="intable">
+                                    <label>ลงชื่อ..................………….......</label>
+                                    </div>
+                                    <div class="row" id="intable">
                                         <label>(นางสถาพร นาวานุเคราะห์)</label>
                                     </div>
-                                    <div class="row" style="text-align: center;">
-                                        <label>หัวหน้างานบริหารงานทั่วไป</label>
+                                    <div class="row" id="intable">
+                                       <label>หัวหน้างานบริหารงานทั่วไป</label>
                                     </div>
                                     <br>
-                                    <div class="row">
-                                        <label>วันที่.................../.................../.....................</label>
+                                    <div class="row" style="text-align: center;">
+                                        <label>วันที่........../........../..........</label>
                                     </div>
                                 </div>
-                    </td>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                            </td>
+                            <td style="padding: 2%">
+                                <div class="row"><label id="hStory">3.ในกรณีที่ต้อง<br>จ่ายค่าธรรมเนียม)  เรียน<br> ผู้ช่วยอธิการบดีสื่อสารองค์กร</label></div>
+                                <label>ผู้ขออนุญาตได้<br>ดำเนินการจ่าย<br>ค่าธรรมเนียมแล้วตาม<br>รายละเอียด ดังนี้</label>
+                                <div class="row">
+                                    <img src="assets/img/unchecked_checkbox.png" width="15" width="15"/> ชำระค่าธรรมเนียม<br>ตามใบเสร็จรับเงิน<br>
+                                        เล่มที่..................………….......<br>เลขที่..................………….......<br>
+                                        จำนวนเงิน..................………….......บาท          
+                                </div>
+                                <div class="row" id="intable">
+                                    <label>จึงเรียนมาเพื่อโปรดพิจารณา</label>
+                                </div>
+                                <div class="row" id="intable">
+                                    <label>ลงชื่อ..................………….......</label>
+                                </div>
+                                <div class="row" id="intable">
+                                    <label>(..................………….......)</label>
+                                </div>
+                                <div class="row">
+                                    <label>..................………….......</label>
+                                </div>
+                                <br>
+                                <div class="row" id="intable">
+                                    <label>วันที่........../........../..........</label>
+                                </div>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                            </td>
+                            <td style="padding: 2%">
+                                <div class="row"><label id="hStory">4.เรียน   หัวหน้างาน<br>รักษาความปลอดภัย</label></div>
+                                <label>ผู้ขออนุญาตได้<br>ดำเนินการตามผลการ<br>พิจารณา ดังนี้</label>
+                                <div class="row">
+                                    <img src="assets/img/unchecked_checkbox.png" width="15" width="15"/> ชำระค่าธรรมเนียม<br>ตามใบเสร็จรับเงิน<br>
+                                        เล่มที่ ..................…………..................<br>เลขที่..................…………..................
+                                </div>
+                                <div class="row">
+                                    <img src="assets/img/unchecked_checkbox.png" width="15" width="15"/> ชำระค่าประกัน<br>การติดตั้งตาม<br>ใบเสร็จรับเงิน<br> เล่มที่ ..................…………..................<br>เลขที่..................…………..................
+                                </div>
+                                <div class="row" id="intable">
+                                    <label>เพื่อโปรดทราบ และดำเนิน<br>การประทับตราอนุญาตการติดตั้งป้าย ต่อไป</label>
+                                </div>
+                                <div class="row" id="intable">
+                                    <label>ลงชื่อ..................…………..................</label>
+                                </div>
+                                <div class="row" id="intable">
+                                    <label>(นางสถาพร นาวานุเคราะห์)</label>
+                                </div>
+                                <div class="row">
+                                    <label>หัวหน้างานบริหารงานทั่วไป</label>
+                                </div>
+                                <br>
+                                <div class="row" id="intable">
+                                    <label>วันที่........../........../..........</label>
+                                </div>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                            </td>
+                        </tr>    
+                    </tbody>    
                 </table>
-                <label class="pull-right" id="hStory">สอบถามรายละเอียดเพิ่มเติมได้ที่  40147 (ชลวภรณ์)</label>
+                <div class="row" style="text-align: right;">
+                    <label id="hStory" style="text-align: right">สอบถามรายละเอียดเพิ่มเติมได้ที่  40147 (ชลวภรณ์)</label>
+                </div>
             </div>
         </div>
     </div>
 </body>
-
 </html>
+
+<?php
+    $html = ob_get_contents();
+    ob_end_clean();
+    $stylesheet = file_get_contents('assets/css/print.css'); // external css
+    $pdf = new mPDF('th', 'A4', '0', 'thsarabunnew', 20, 15, 5, 30);
+    $pdf->SetAutoFont(AUTOFONT_THAIVIET);
+    $pdf->SetDisplayMode('fullpage');
+    $pdf->WriteHTML($stylesheet,1);
+    $pdf->WriteHtml($html, 2);
+    $pdf->Output();
+?>
