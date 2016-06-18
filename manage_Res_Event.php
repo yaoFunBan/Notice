@@ -1,96 +1,23 @@
 <?php
- include "conn.php"
+ include "conn.php";
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เพิ่ม/ลบ/แก้ไข ประชาสัมพันธ์</title>
+    <title>Bootsrtap Free Admin Template - SIMINTA | Admin Dashboad Template</title>
     <!-- Core CSS - Include with every page -->
-    <link href="assets/plugins/bootstrap/bootstrap.css" rel="stylesheet"/>
-    <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet"/>
-    <link href="assets/plugins/pace/pace-theme-big-counter.css" rel="stylesheet"/>
-    <link href="assets/css/style.css" rel="stylesheet"/>
-    <link href="assets/css/main-style.css" rel="stylesheet"/>
+    <link href="assets/plugins/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="assets/plugins/pace/pace-theme-big-counter.css" rel="stylesheet" />
+    <link href="assets/css/style.css" rel="stylesheet" />
+    <link href="assets/css/main-style.css" rel="stylesheet" />
+
     <!-- Page-Level CSS -->
-    <link href="assets/plugins/morris/morris-0.4.3.min.css" rel="stylesheet"/>
-    <link href="assets/css/jasny-bootstrap.min.css" rel="stylesheet"/>
+    <link href="assets/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet" />
     
-    <script type="text/javascript">
-        function InsertNews(){
-            var title = $("#titleNews").val();
-            var desri = $("#newsDetail").val();
-            
-            var form = new FormData();
-            form.append('todo',"insertNews");
-            form.append('title', title);
-            form.append('desrict', desri);
-            
-            $.ajax({
-               url: 'sqlNews.php',
-               data: form,
-               type: 'POST',
-               contentType: false, 
-               cache: false,
-               processData: false,
-               success: function (data) {
-                   document.getElementById("showdata").innerHTML = data;
-               }
-            });
-        }
-        
-        
-        function delNews(nId){
-            $.ajax({
-               url:'sqlNews.php',
-               data:{
-                   todo: "delNews",
-                   nId: nId
-               },
-               type: 'POST',
-               success: function (data) {
-                   document.getElementById("showSelect").innerHTML = data;
-               }
-            });
-        }
-        
-        function editNews(nId){
-            $.ajax({
-               url:'sqlNews.php',
-               data:{
-                   todo: "selNews",
-                   nId: nId
-               },
-               type: 'POST',
-               success: function (data) {
-                   document.getElementById("showSelect").innerHTML = data;
-               }
-            });
-        }
-        
-        function updateNews(nId){
-            var eNews = $("#editTitle").val();
-            var eDetail = $("#editDetail").val();
-            
-            $.ajax({
-               url : 'sqlNews.php',
-               type : 'post',
-               data:{
-                   todo: 'editNews',
-                   nId: nId,
-                   eNews: eNews,
-                   eDatail: eDetail
-               },
-               success: function (data) {
-                   document.getElementById("showResult").innerHTML = data;
-               }
-            });
-        }
-    </script>
-       
 </head>
 <body>
 <!--  wrapper -->
@@ -356,7 +283,7 @@
                 </li>
 
                 <li>
-                    <a href="index.php"><i class="fa fa-home fa-fw"></i>หน้าแรก</a>
+                    <a href="#"><i class="fa fa-home fa-fw"></i>หน้าแรก</a>
                 </li>
                 <li>
                     <a href="#"><i class="fa fa-calendar fa-fw"></i> ตารางการใช้ป้าย</a>
@@ -368,10 +295,10 @@
                 <li>
                     <a href="#"><i class="fa fa-book fa-fw"></i>คู่มือการใช้งานระบบ</a>
                 </li>
-                <li>
-                    <a href="Res_Notice.php"><i class="fa fa-table fa-fw"></i>แบบฟอร์มการจองป้าย</a>
+                <li class="selected">
+                    <a href="#"><i class="fa fa-table fa-fw"></i>แบบฟอร์มการจองป้าย</a>
                 </li>
-                <li class="active">
+                <li>
                     <a href="#"><i class="fa fa-book fa-fw"></i> ผู้ดูแลระบบ<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
@@ -383,7 +310,7 @@
                         <li>
                             <a href="editDoc.php">เพิ่ม/ลบ/แก้ไขเอกสาร</a>
                         </li>
-                        <li class="selected">
+                        <li>
                             <a href="manageNews.php">เพิ่ม/แก้ไข/ลบ ประชาสัมพันธ์</a>
                         </li>
                         <li>
@@ -398,127 +325,188 @@
         <!-- end sidebar-collapse -->
     </nav>
     <!-- end navbar side -->
-
-    <!--  page-Document -->
     <div id="page-wrapper">
         <div class="row">
-            <!-- page Document -->
+            <!-- page header -->
             <div class="col-lg-12">
-                <h1 class="page-header">เพิ่ม/ลบ/แก้ไข ประชาสัมพันธ์</h1>
+                <h1 class="page-header">แบบฟอร์มการจองป้าย</h1>
             </div>
-            <!--end page header -->
+                <!--end page header -->
         </div>
-        <?php
-            
-            $sql_sel = "SELECT * FROM news";
-            $result = $conn->query($sql_sel);
-        ?>
-        
         <div class="row">
-            <div class="col-lg-12">
-                <!-- Form Elements -->
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        ประชาสัมพันธ์ทั้งหมด
-                    </div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <form name="fomeInsert" id="fomeInsert" method="post" enctype="multipart/form-data">
-                                <div class="col-lg-12">
-                                  <table class="table">
-                                        <col width="300">
-                                        <col width="20">
-                                        <col width="20">
+        <div class="col-lg-12">
+            <!-- Advanced Tables -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                             รายการการจองป้าย
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                    <col width="250">
+                                    <col width="250">
+                                    <col width="100">
+                                    <col width="100">
+                                    <col width="100">
+                                    <col width="50">
+                                    <col width="100">
+                                    <thead>
                                         <tr>
-                                            <th>ชื่อเรื่องประชาสัมพันธ์</th>
-                                            <th></th>
+                                            <th>ชื่อกิจกรรม</th>
+                                            <th>ป้ายที่จอง</th>
+                                            <th>วันเริ่มติดตั้ง</th>
+                                            <th>วันสุดท้าย</th>
+                                            <th>วันรื้อถอนป้าย</th>
+                                            <th>สถานะ</th>
                                             <th></th>
                                         </tr>
-                                        <tbody>
-                                            <?php
-                                                while ($rows = $result->fetch_array()){
-                                                    echo '<tr>';
-                                                        echo '<td>';
-                                                        echo '<label>'.$rows[1].'</label>';
-                                                        echo '</td>';
-                                                        echo '<td>';
-                                                            echo '<div class="form-group">';
-                                                                echo '<button type="button" class="btn btn-success" name="btn_edit" id="btn_edit" value="'.$rows[0].'" onclick="editNews('.$rows[0].')">แก้ไข</button>';
-                                                            echo '</div>';
-                                                        echo '</td>';
-                                                         echo '<td>';
-                                                            echo '<div class="form-group">';
-                                                                echo '<button type="button" class="btn btn-danger" name="btn_del" id="btn_del" value="'.$rows[0].'" onclick="delNews('.$rows[0].')">ลบ</button>';
-                                                            echo '</div>';
-                                                        echo '</td>';
-                                                    echo '</tr>';
+                                    </thead>
+                                    
+                                    <?php
+                                        function sel_notice($s_notice,$conn){
+                                            if (strlen($s_notice) > 1){
+                                                $arr_name = explode("_", $s_notice);
+                                                for($i=0;$i<count($arr_name);$i++){
+                                                    $sql_sel_notice = "SELECT nName FROM local_notice WHERE nId = ".$arr_name[$i];
+                                                    $result = $conn->query($sql_sel_notice);
+                                                    $row = $result->fetch_array();
+                                                    echo '<li>'.$row[0].'</li>';
                                                 }
-                                            ?>
-                                        </tbody>
+                                            }else{
+                                               $sql_sel_notice = "SELECT nName FROM local_notice WHERE nId = ".$s_notice;
+                                               $result = $conn->query($sql_sel_notice);
+                                               $row = $result->fetch_array();
+                                               echo '<li>'.$row[0].'</li>';
+                                            }
+                                        }
+                                        
+                                        function change_mount($mount){
+                                            if($mount == '01'){
+                                                return 'ม.ค.';
+                                            }else if($mount == '02'){
+                                                return 'ก.พ.';
+                                            }else if($mount == '03'){
+                                                return 'มี.ค.';
+                                            }else if($mount == '04'){
+                                                return 'เม.ย.';
+                                            }else if($mount == '05'){
+                                                return 'พ.ค.';
+                                            }else if($mount == '06'){
+                                                return 'มิ.ย.';
+                                            }else if($mount == '07'){
+                                                return 'ก.ค.';
+                                            }else if($mount == '08'){
+                                                return 'ส.ค.';
+                                            }else if($mount == '09'){
+                                                return 'ก.ย.';
+                                            }else if($mount == '10'){
+                                                return 'ต.ค.';
+                                            }else if($mount == '11'){
+                                                return 'พ.ย.';
+                                            }else if($mount == '12'){
+                                                return 'ธ.ค.';
+                                            }
+                                        }
+                                        
+                                        function changeYear($year){
+                                               return intval($year) + 543 ;
+                                        }
+                                        
+                                        
+                                    ?>
+                                    <tbody>
+                                        <?php
+                                            $sql_sel_event = "SELECT * FROM event";
+                                            $result = $conn->query($sql_sel_event);
+                                            while ($rows = $result->fetch_array()){
+                                            list($Syear, $Smonth, $Sday) = split("-", $rows[4]);
+                                            list($Eyear, $Emonth, $Eday) = split("-", $rows[5]);
+                                            list($Oyear, $Omonth, $Oday) = split("-", $rows[6]);
+                                                echo '<tr class="odd gradeX">';
+                                                    echo '<td><a href="Detail_event.php?eId='.$rows[0].'" alt="รายละเอียด" title="รายละเอียด">'.$rows[3].'</td>';
+                                                    echo '<td>';
+                                                        echo '<ol>';
+                                                            echo '<ul>'.sel_notice($rows[2],$conn).'</ul>';
+                                                        echo '</ol>';
+                                                    echo '</td>';
+                                                    echo '<td>'.$Sday.' '.change_mount($Smonth).' '.changeYear($Syear).'</td>';
+                                                    echo '<td>'.$Eday.' '.change_mount($Emonth).' '.changeYear($Eyear).'</td>';
+                                                    echo '<td>'.$Oday.' '.change_mount($Omonth).' '.changeYear($Oyear).'</td>';
+                                                    echo '<td>'.$rows[9].'</td>';
+                                                    echo '<td>';
+                                                        echo '<a href="edit_form_admin.php?eId='.$rows[0].'"><button class="btn btn-outline btn-primary" type="button" style="margin:5px;">แก้ไข</button></a><br>';
+                                                        echo '<button class="btn btn-outline btn-success" type="button" style="margin:5px;" onclick="update_status_accept('.$rows[0].')">อนุมัติ</button><br>';
+                                                        echo '<button class="btn btn-outline btn-danger" type="button" style="margin:5px;" onclick="update_status_unaccept('.$rows[0].')">ไม่อนุมัติ</button>';
+                                                    echo '</td>';
+                                                echo '</tr>';
+                                            }
+                                        ?>
+                                    </tbody>
                                 </table>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="row">
-                            <div id="showSelect"></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- End Form Elements -->
-            </div>
-        </div>      
-        
-
-        <div class="row">
-            <div class="col-lg-12">
-                <!-- Form Elements -->
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        เพิ่มข่าวประชาสัมพันธ์
-                    </div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <form name="addNews" id="addNews" method="post" enctype="multipart/form-data">
-                                    <div class="form-group">
-                                        <label>หัวข้อประชาสัมพันธ์</label>
-                                        <input class="form-control" id="titleNews" name="titleNews" placeholder="กรุณาใส่หัวข้อ">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>รายละเอียด</label>
-                                        <textarea class="form-control" id="newsDetail" name="newsDetail" style="resize: none; width: 800; height: 300px;"></textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <button type="button" class="btn btn-success" name="btn_add" id="btn_add" onclick="InsertNews()">เพิ่มประชาสัมพันธ์</button>
-                                    </div>
-                                </form>
-                                <div id="showdata"></div>
                             </div>
+                            <div id="show"></div>
                         </div>
                     </div>
+                    <!--End Advanced Tables -->
                 </div>
-                <!-- End Form Elements -->
             </div>
-        </div>
     </div>
+        <!-- end page-wrapper -->
 
 </div>
 <!-- end wrapper -->
-
-<!-- Core Scripts - Include with every page -->
 <script src="assets/plugins/jquery-1.10.2.js"></script>
 <script src="assets/plugins/bootstrap/bootstrap.min.js"></script>
 <script src="assets/plugins/metisMenu/jquery.metisMenu.js"></script>
 <script src="assets/plugins/pace/pace.js"></script>
 <script src="assets/scripts/siminta.js"></script>
 <!-- Page-Level Plugin Scripts-->
-<script src="assets/plugins/morris/raphael-2.1.0.min.js"></script>
-<script src="assets/plugins/morris/morris.js"></script>
-<script src="assets/scripts/jasny-bootstrap.min.js"></script>
+<script src="assets/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="assets/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script>
+$(document).ready(function () {
+    $('#dataTables-example').dataTable();
+});
+</script>
 
-
+<script type="text/javascript">
+    
+    function update_status_accept(eId){
+        var status = "accept";
+//        alert(eId);
+        $.ajax({
+           url: 'admin_manage_event.php',
+           type: 'POST',
+           data: {
+                eId : eId,
+                status : status,
+                todo : "accept"
+           },
+           success: function (data, textStatus, jqXHR) {
+            document.getElementById("show").innerHTML = data;
+            location.reload();
+           }
+        });
+    }
+    
+    function update_status_unaccept(eId){
+        var status = "unaccept";
+//        alert(eId);
+        $.ajax({
+           url: 'admin_manage_event.php',
+           type: 'POST',
+           data: {
+                eId : eId,
+                status : status,
+                todo : "unaccept"
+           },
+           success: function (data, textStatus, jqXHR) {
+            document.getElementById("show").innerHTML = data;
+            location.reload();
+           }
+        });
+    }
+</script>
 </body>
 
 </html>
-
-

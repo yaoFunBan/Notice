@@ -254,9 +254,9 @@
                 </a>
                 <!-- dropdown user-->
                 <ul class="dropdown-menu dropdown-user">
-                    <li><a href="#"><i class="fa fa-user fa-fw"></i>User Profile</a>
+                    <li><a href="profile_user.php"><i class="fa fa-user fa-fw"></i>โปรไฟล์</a>
                     </li>
-                    <li><a href="#"><i class="fa fa-gear fa-fw"></i>Settings</a>
+                    <li><a href="list_event_user.php"><i class="fa fa-gear fa-fw"></i>รายการจองป้าย</a>
                     </li>
                     <li class="divider"></li>
                     <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i>Logout</a>
@@ -313,7 +313,7 @@
                     <a href="#"><i class="fa fa-book fa-fw"></i> ผู้ดูแลระบบ<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="#">อนุมัติการจอง</a>
+                            <a href="manage_Res_Event.php">จัดการการจอง</a>
                         </li>
                         <li>
                             <a href="manageNotice.php">เพิ่ม/ลบ/แก้ไขป้าย</a>

@@ -12,9 +12,15 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/xampp/htdocs/systemnotice/sqlnotice.php</file>
             <file>file:/C:/xampp/htdocs/systemnotice/edit_form.php</file>
+            <file>file:/C:/xampp/htdocs/systemnotice/html/buttons.html</file>
+            <file>file:/C:/xampp/htdocs/systemnotice/html/forms.html</file>
             <file>file:/C:/xampp/htdocs/systemnotice/conn.php</file>
-            <file>file:/C:/xampp/htdocs/systemnotice/manageEvent.php</file>
+            <file>file:/C:/xampp/htdocs/systemnotice/manage_Res_Event.php</file>
+            <file>file:/C:/xampp/htdocs/systemnotice/admin_manage_event.php</file>
+            <file>file:/C:/xampp/htdocs/systemnotice/Detail_event.php</file>
+            <file>file:/C:/xampp/htdocs/systemnotice/Res_Notice.php</file>
         </group>
     </open-files>
 </project-private>
