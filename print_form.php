@@ -2,9 +2,12 @@
  include "conn.php";
  require_once './mpdf/mpdf.php';
  
- $eId = 1; 
- $sql_sel = "SELECT * FROM profile WHERE user_id = 1";
- $result = $conn->query($sql_sel);
+ $eId = $_GET['eId'];
+ $sql_sel_event = "SELECT * FROM event WHERE eId=".$eId;
+ $result_event = $conn->query($sql_sel_event);
+ $row_event = $result_event->fetch_array();
+ $sql_sel_notice = "SELECT * FROM profile WHERE user_id =".$row_event[1];
+ $result = $conn->query($sql_sel_notice);
  $row = $result->fetch_array();
 
 ?>
@@ -43,6 +46,38 @@
             <label><span id="hStory">ข้าพเจ้า</span>...........<?php echo $row[1].'..'.$row[2]?>.....................</label>
             <label><span id="hStory">หน่วยงาน</span>..........<?php echo $row[3]?>......<span id="hStory">เบอร์โทร</span>.....<?php echo $row[4]?>.....</label>
         <div class="form-group">
+            <?php
+               
+            $notice = explode("_", $row_event[2]);
+            $c1 = 0; // count is width 6 and heigth 2.4
+            $c2 = 0; // count is width 8.4 and heigth 3.6
+            $c3 = 0; // count is width 5 and heigth 2.4
+            $c4 = 0; // etc.
+            $local1 = array();
+            $local2 = array();
+            $local3 = array();
+            $local4 = array();
+            for($i = 0;$i < count($notice); $i++){
+                $sel_notice = "SELECT * FROM local_notice WHERE nId = ".$notice[$i];
+                $result3 = $conn->query($sel_notice);
+                $row3 = $result3->fetch_array();
+                if(($row3[2] == '6') && ($row3[3] == '2.4')){
+                    $local1[$c1] = $notice[$i];
+                    $c1++;
+                }else if(($row3[2] == '8.4') && ($row3[3] == '3.6')) {
+                    $local2[$c2] = $notice[$i];
+                    $c2++;
+                }else if((($row3[2] == '5')) && ($row[3] == '2.4')) {
+                    $local3[$c3] = $notice[$i];
+                    $c3++;
+                }else{
+                    $local4[$c4] = $notice[$i];
+                    $c4++;
+                }
+               
+            }
+            
+        ?>
             <table class="table table-bordered" >
                 <thead>
                     <tr>
@@ -67,31 +102,64 @@
                             </div>
                             <div class="form-group">
                                 <label>
-                                    1. ขนาด กว้าง............6..............เมตร ยาว..........2.4...........เมตร<br>จำนวน.............จุด
+                                    1. ขนาด กว้าง............6..............เมตร ยาว..........2.4...........เมตร<br>จำนวน......<?php echo $c1?>.......จุด
                                 </label>
                             </div>
                         </td>
-                        <td style="padding: 2%"></td>
+                        <td style="padding: 2%">
+                            <ol>
+                                <?php
+                                    for($i=0;$i<count($local1); $i++){
+                                        $sql_sel_notice1 = "SELECT nName FROM local_notice WHERE nId = ". $local1[$i];
+                                        $result_name = $conn->query($sql_sel_notice1);
+                                        $name = $result_name->fetch_array();
+                                        echo '<li>'.$name[0].'</li>';
+                                    }
+                                ?>
+                            </ol>
+                        </td>
                     </tr>
                     <tr>
                         <td style="padding: 2%">
                             <div class="form-group">
                                 <label>
-                                    2. ขนาด กว้าง............8.4...........เมตร ยาว..........3.6...........เมตร<br>จำนวน.............จุด
+                                    2. ขนาด กว้าง............8.4...........เมตร ยาว..........3.6...........เมตร<br>จำนวน.......<?php echo $c2?>......จุด
                                 </label>
                             </div>
                         </td>
-                        <td style="padding: 2%"></td>
+                        <td style="padding: 2%">
+                            <ol>
+                                <?php
+                                    for($i=0;$i<count($local2); $i++){
+                                        $sql_sel_notice1 = "SELECT nName FROM local_notice WHERE nId = ". $local2[$i];
+                                        $result_name = $conn->query($sql_sel_notice1);
+                                        $name = $result_name->fetch_array();
+                                        echo '<li>'.$name[0].'</li>';
+                                    }
+                                ?>
+                            </ol>
+                        </td>
                     </tr>
                     <tr>
                         <td style="padding: 2%">
                             <div class="form-group">
                                 <label>
-                                    3. ขนาด กว้าง............5..............เมตร ยาว..........2.4...........เมตร<br>จำนวน.............จุด
+                                    3. ขนาด กว้าง............5..............เมตร ยาว..........2.4...........เมตร<br>จำนวน.......<?php echo $c3?>......จุด
                                 </label>
                             </div>
                         </td>
-                        <td style="padding: 2%"></td>
+                        <td style="padding: 2%">
+                             <ol>
+                                <?php
+                                    for($i=0;$i<count($local3); $i++){
+                                        $sql_sel_notice1 = "SELECT nName FROM local_notice WHERE nId = ". $local3[$i];
+                                        $result_name = $conn->query($sql_sel_notice1);
+                                        $name = $result_name->fetch_array();
+                                        echo '<li>'.$name[0].'</li>';
+                                    }
+                                ?>
+                            </ol>
+                        </td>
                     </tr>
                     <tr>
                         <td style="padding: 2%">
@@ -101,24 +169,82 @@
                                 </label>
                                 <div class="form-group">
                                     <label>
-                                    ขนาด กว้าง...............................เมตร ยาว.............................เมตร<br>จำนวน.................จุด
+                                    ขนาด กว้าง...............................เมตร ยาว.............................เมตร<br>จำนวน........<?php echo $c4?>.........จุด
                                     </label>
                                 </div>
                             </div>
                         </td>
-                        <td style="padding: 2%"></td>
+                        <td style="padding: 2%">
+                                                         <ol>
+                                <?php
+                                    for($i=0;$i<count($local4); $i++){
+                                        $sql_sel_notice1 = "SELECT nName FROM local_notice WHERE nId = ". $local4[$i];
+                                        $result_name = $conn->query($sql_sel_notice1);
+                                        $name = $result_name->fetch_array();
+                                        echo '<li>'.$name[0].'</li>';
+                                    }
+                                ?>
+                            </ol>
+                        </td>
                     </tr>
                 </tbody>
             </table>
+            <?php 
+                                           list($Syear, $Smonth, $Sday) = split("-", $row_event[4]);
+                                           list($Eyear, $Emonth, $Eday) = split("-", $row_event[5]);
+                                           list($Oyear, $Omonth, $Oday) = split("-", $row_event[6]);
+                                           
+                                           function chageMount($mount){
+                                               if($mount == "01"){
+                                                   return "มกราคม";   
+                                               }else if($mount == "02"){
+                                                   return "กุมภาพันธ์";
+                                               }else if($mount == "03"){
+                                                   return "มีนาคม";
+                                               }else if($mount == "04"){
+                                                   return "เมษายน";
+                                               }else if($mount == "05"){
+                                                   return "พฤษภาคม";
+                                               }else if($mount == "06"){
+                                                   return "มิถุนายน";
+                                               }else if($mount == "07"){
+                                                   return "กรกฎาคม";
+                                               }else if($mount == "08"){
+                                                   return "สิงหาคม";
+                                               }else if($mount == "09"){
+                                                   return "กันยายน";
+                                               }else if($mount == "10"){
+                                                   return "ตุลาคม";
+                                               }else if($mount == "11"){
+                                                   return "พฤศจิกายน";
+                                               }else if($mount == "12"){
+                                                   return "ธันวาคม";
+                                               }
+                                           }
+                                           
+                                           function changeYear($year){
+                                               return intval($year) + 543 ;
+                                           }
+                                           
+                                            function DateDiff($strDate1,$strDate2)
+                                            {
+                                                return (strtotime($strDate2) - strtotime($strDate1))/  ( 60 * 60 * 24 );  // 1 day = 60*60*24
+                                            }
+                                        ?>
             <div class="form-group">
                 <h4>สำหรับกิจกรรม</h4>
-                <label>......................................................................................(แนบข้อความและแบบป้ายประกอบการขออนุญาต)</label>
+                <label>.........................<?php echo $row_event[3];?>..............................(แนบข้อความและแบบป้ายประกอบการขออนุญาต)</label>
             </div>
             <div class="form-group">
-                <span id="hStory">ตั้งแต่</span> <label>วันที่............เดือน.......................พ.ศ.................ถึง วันที่............เดือน.......................พ.ศ..................</label>
+                <span id="hStory">ตั้งแต่</span> <label>วันที่....<?php echo $Sday;?>....เดือน........<?php echo chageMount($Smonth);?>........พ.ศ.....<?php echo changeYear($Syear)?>.....ถึง วันที่...<?php echo $Eday;?>...เดือน........<?php echo chageMount($Eyear);?>........พ.ศ.....<?php echo changeYear($Eyear)?>.....</label>
             </div>
             <div class="form-group">
-                <span id="hStory">โดยจะทำการรื้อถอนให้แล้วเสร็จใน </span> <label>วันที่.............................เดือน.............................พ.ศ.............................</label>
+                <span id="hStory">โดยจะทำการรื้อถอนให้แล้วเสร็จใน </span> <label>วันที่.......<?php echo $Oday;?>.......เดือน..........<?php echo chageMount($Omonth);?>..........พ.ศ.......<?php echo changeYear($Oyear)?>.......</label>
+            </div>
+            <div class="form-group">                                            
+                <label>
+                    รวมระยะเวลาขอติดตั้ง.....<?php  echo DateDiff($row_event[4],$row_event[5])?>.....วัน
+                </label>
             </div>
             <div class="form-group" style="text-indent: 15%">
                 <label>กรณีป้ายโฆษณาที่ติดตั้งไว้ได้ก่อให้เกิดความเสียหายต่อชีวิต ร่างกาย หรือทรัพย์สินของบุคคล<br>อื่นไม่ว่ากรณีใดๆก็ตาม   ผู้ได้รับอนุญาตจะต้องรับผิดชอบต่อความเสียหายที่เกิดขึ้นนั้น</label>
@@ -129,10 +255,6 @@
             <div class="form-group" style="text-indent: 15%">
                 <label>จึงเรียนมาเพื่อโปรดพิจารณาอนุญาต   จักขอบคุณยิ่ง</label>
             </div>
-            <br>
-            <br>
-            <br>
-            <br>
             <br>
             <br>
             <br>

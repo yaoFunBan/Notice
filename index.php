@@ -282,7 +282,7 @@
                 </li>
 
                 <li class="selected">
-                    <a href="#"><i class="fa fa-home fa-fw"></i>หน้าแรก</a>
+                    <a href="index.php"><i class="fa fa-home fa-fw"></i>หน้าแรก</a>
                 </li>
                 <li>
                     <a href="#"><i class="fa fa-calendar fa-fw"></i> ตารางการใช้ป้าย</a>

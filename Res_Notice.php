@@ -369,7 +369,10 @@
                                         </div>
                                         <div class="form-group">
                                             <label>วันรื้อถอน</label>
-                                            <input class="form-control" name="outevent" id="outevent" placeholder="เลือกวันทำการรื้อถอน">
+                                            <input class="form-control" name="outevent" id="outevent" readonly >
+                                        </div>
+                                         <div class="form-group">
+                                            <button type="button" class="btn tn btn-outline btn-success" onclick="checkDateOverlap()">เช็คป้าย</button>
                                         </div>
                                     <?php
                                         $sql_sel = "SELECT * FROM local_notice";
@@ -413,6 +416,10 @@
                                         </div>
                                         <div id="show"></div>
                                     </div>
+                                    <div class="col-lg-6">
+                                        <div id="display_notice">
+                                        </div>
+                                     </div>
                                 </form>
                             </div>
                         </div>
@@ -459,7 +466,7 @@
             language: "th",
             autoclose: true,
             todayHighlight: true,
-            dateFormat: 'yy/mm/dd',
+            dateFormat: 'yy-mm-dd',
             onSelect: function(selected) {
               $("#txtToDate").datepicker("option","minDate", selected);
             }
@@ -470,10 +477,15 @@
             language: "th",
             autoclose: true,
             todayHighlight: true,
-            dateFormat: 'yy/mm/dd',
+            dateFormat: 'yy-mm-dd',
             onSelect: function(selected) {
-               $("#txtFromDate").datepicker("option","maxDate", selected);    
-             }
+               $("#txtFromDate").datepicker("option","maxDate", selected);
+               var outDate = $("#txtToDate").datepicker('getDate');
+               outDate.setDate(outDate.getDate()+3);
+               
+               $("#outevent").datepicker('setDate', outDate);
+//               $("input[name='test']").val(selected);
+            }  
         });
     });
     
@@ -481,11 +493,20 @@
 <script type="text/javascript">
     $(function () {
         $("#outevent").datepicker({
-            todayBtn: "linked",
-            language: "th",
-            autoclose: true,
-            todayHighlight: true,
-            dateFormat: 'yy/mm/dd' 
+            dateFormat: 'yy-mm-dd',
+            beforeShow: function (input, inst) 
+            { 
+                if($(input).attr('readonly') !== undefined ) {
+                    if(inst.o_dpDiv === undefined) {
+                        inst.o_dpDiv = inst.dpDiv;
+                    }
+                    inst.dpDiv = $('<div style="display: none;"></div>');
+                } else {
+                    if(inst.o_dpDiv !== undefined) {
+                        inst.dpDiv = inst.o_dpDiv;
+                    }
+                }
+            }
         });
     });
 </script>
@@ -527,8 +548,28 @@
                }
              });
         }
+        
+        
+        function checkDateOverlap(){
+            var star_date = $("#txtFromDate").val();
+            var out_date = $("#outevent").val();
+            
+            $.ajax({
+               url : "manageEvent.php",
+               type: 'POST',
+               data: {
+                   todo : "check_notice",
+                   sDate: star_date,
+                   oDate: out_date
+               },
+               success: function (data) {
+                  document.getElementById("display_notice").innerHTML = data;
+               }
+            });
+        }
     </script>
-
+    
+    
 </body>
 
 </html>

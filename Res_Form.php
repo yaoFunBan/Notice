@@ -346,7 +346,7 @@
                 <!--end page header -->
             </div>
         <?php
-            $eId = 1;
+            $eId = 3;
             $sql = "SELECT * FROM event WHERE eId =  ".$eId;
             $result = $conn->query($sql);
             $row = $result->fetch_array();
@@ -566,7 +566,6 @@
                                                 <?php echo 'ตั้งแต่วันที่..'.$Eday.'..เดือน.......'.chageMount($Emonth).'.......พ.ศ...........'.changeYear($Eyear).'...........' ?>
                                             </label>
                                             <label>
-                                                
                                                 รวมระยะเวลาขอติดตั้ง.....<?php  echo DateDiff($row[4],$row[5])?>.....วัน
                                             </label>
                                         </div>

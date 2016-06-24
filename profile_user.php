@@ -7,7 +7,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bootsrtap Free Admin Template - SIMINTA | Admin Dashboad Template</title>
+    <title>โปรไฟล์</title>
     <!-- Core CSS - Include with every page -->
     <link href="assets/plugins/bootstrap/bootstrap.css" rel="stylesheet"/>
     <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet"/>
@@ -290,7 +290,7 @@
                 </li>
 
                 <li>
-                    <a href="#"><i class="fa fa-home fa-fw"></i>หน้าแรก</a>
+                    <a href="index.php"><i class="fa fa-home fa-fw"></i>หน้าแรก</a>
                 </li>
                 <li>
                     <a href="#"><i class="fa fa-calendar fa-fw"></i> ตารางการใช้ป้าย</a>
@@ -302,8 +302,8 @@
                 <li>
                     <a href="#"><i class="fa fa-book fa-fw"></i>คู่มือการใช้งานระบบ</a>
                 </li>
-                <li class="selected">
-                    <a href="#"><i class="fa fa-table fa-fw"></i>แบบฟอร์มการจองป้าย</a>
+                <li>
+                    <a href="Res_Notice.php"><i class="fa fa-table fa-fw"></i>แบบฟอร์มการจองป้าย</a>
                 </li>
                 <li>
                     <a href="#"><i class="fa fa-book fa-fw"></i> ผู้ดูแลระบบ<span class="fa arrow"></span></a>
@@ -331,6 +331,13 @@
         </div>
         <!-- end sidebar-collapse -->
     </nav>
+    <?php
+        $user_id = 1;
+        $sql_sel = "SELECT * FROM profile WHERE user_id=".$user_id;
+        $result = $conn->query($sql_sel);
+        $rows = $result->fetch_array();
+        
+    ?>
     <!-- end navbar side -->
     <div id="page-wrapper">
             <div class="row">
@@ -345,12 +352,55 @@
                     <!-- Form Elements -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                           แบบฟอร์มการจองป้าย
+                           โปรไฟล์ผู้ใช้
                         </div>
                         <div class="panel-body">
-                            <div class="row">
-                               
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <col width="20">
+                                    <col width="200">
+                                    <tbody>
+                                        <tr>
+                                            <td>ชื่อ</td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input class="form-control" id="fuser" class="fuser" value="<?php echo $rows[1]?>">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>นามสกุล</td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input class="form-control" id="luser" class="luser" value="<?php echo $rows[2]?>">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                         <tr>
+                                            <td>หน่วยงาน/คณะ</td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input class="form-control" id="depart_user" class="depart_user" value="<?php echo $rows[3]?>">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>เบอร์โทรศัพท์</td>
+                                            <td>
+                                                <div class="form-group ">
+                                                    <input class="form-control" id="tel_user" class="tel_user" value="<?php echo $rows[4]?>">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="col-lg-offset-5">
+                                    <?php
+                                        echo '<button class="btn btn-outline btn-success" type="button" style="margin:5px;" onclick="edit_profile('.$user_id.')" >แก้ไข</button>';
+                                    ?>
+                                </div>
                             </div>
+                            <div id="show"></div>
                         </div>
                     </div>
                      <!-- End Form Elements -->
@@ -370,5 +420,32 @@
 <script src="assets/scripts/siminta.js"></script>
 <!-- Page-Level Plugin Scripts-->
 </body>
+
+<script type="text/javascript">
+    
+    function edit_profile(user_id){
+        var fname = $("#fuser").val();
+        var lname = $("#luser").val();
+        var duser = $("#depart_user").val();
+        var tuser = $("#tel_user").val();
+        $.ajax({
+           url: 'user_sql.php',
+           type: 'POST',
+           data: {
+                user_id : user_id,
+                todo : "edit_user",
+                fname: fname,
+                lname: lname,
+                depart: duser,
+                tel: tuser,
+           },
+           success: function (data) {
+            document.getElementById("show").innerHTML = data;
+            location.reload();
+           }
+        });
+    }
+    
+</script>
 
 </html>
