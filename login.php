@@ -22,22 +22,24 @@
     <div class="container">
        
         <div class="row">
-            <div class="col-md-4 col-md-offset-4 text-center logo-margin ">
-              <img src="../assets/img/logo.png" alt=""/>
-                </div>
+            <div class="col-md-5 col-md-offset-3 text-center logo-margin ">
+                <img src="assets/img/logo2.png" alt=""/>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-4 col-md-offset-4">
                 <div class="login-panel panel panel-default">                  
                     <div class="panel-heading">
-                        <h3 class="panel-title">กรุณาเข้าสู่ระบบ</h3>
+                        <h3 class="panel-title col-md-offset-4">กรุณาเข้าสู่ระบบ</h3>
                     </div>
                     <div class="panel-body">
-                        <form role="form" action="login.php" method="POST">
+                        <form role="form" action="assets/Auth/LdapConn.php" method="POST">
                             <fieldset>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="รหัสเข้าใช้งานอินเตอร์เน็ต" name="username" id="username" class="username" type="text" autofocus>
+                                    <input class="form-control" placeholder="รหัสเข้าใช้งานอินเตอร์เน็ต" name="Login[Username]" id="username" class="username" type="text" autofocus>
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Password" name="password" type="password" value="">
+                                    <input class="form-control" placeholder="Password" name="Login[Password]" type="password" value="">
                                 </div>
                                 <button class="btn btn-lg btn-success btn-block" type="submit" >Login</button>
                             </fieldset>
@@ -58,21 +60,21 @@
     <script src="assets/plugins/metisMenu/jquery.metisMenu.js"></script>
 
 </body>
-<?php
-    if(isset($_POST['username'])){
-        $user = $_POST['username'];
-        $sql_check_user = "SELECT * FROM profile WHERE user_name ='".$user."' ";
-        $result = $conn->query($sql_check_user);
-//        $result->execute();
-//        echo $result->fetchColumn();
-        if($result->rowCount > 0){
-            $row = $result->fetch_array();
+//<?php
+//    if(isset($_POST['username'])){
+//        $user = $_POST['username'];
+//        $sql_check_user = "SELECT * FROM profile WHERE user_name ='".$user."' ";
+//        $result = $conn->query($sql_check_user);
+////        $result->execute();
+////        echo $result->fetchColumn();
+//        if($result->num_rows){
+//            $row = $result->fetch_array();
 //            header("Location:index.php");
-             echo $row[5];
-        }else{
-//            echo 'dddd';
+//             echo $row[5];
+//        }else{
+////            echo 'dddd';
 //            header("Location:loginf.php");
-        }
-    }
-?>
+//        }
+//    }
+//?>
 </html>

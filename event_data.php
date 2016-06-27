@@ -3,15 +3,14 @@
     header("Cache-Control: no-store, no-cache, must-revalidate");         
     header("Cache-Control: post-check=0, pre-check=0", false);    
     include './conn.php';
-        $eId = -1;
+
         $color = "";    
-    if($_GET['gData']){
-        if(isset($_GET['eId'])){
-            $eId = $_GET['eId'];
-//            echo "<script type='text/javascript'>alert('$eId');</script>";
-            $sql_sel_event = "SELECT * FROM event WHERE nIds LIKE '%5%'";
-        }  else {
-            $sql_sel_event = "SELECT * FROM event";    
+    if($_POST['gData']){
+        if(isset($_POST['nId'])){
+            $eId = $_POST['nId'];
+            $sql_sel_event = "SELECT * FROM event WHERE eId = '".$eId."'";
+        }else{
+            $sql_sel_event = "SELECT * FROM event";
         }
 
         $result = $conn->query($sql_sel_event);

@@ -1,6 +1,7 @@
 <?php
     include './conn.php';
     $todo = $_POST['todo'];
+    $k = 0;    
     $pathImage = "exampleNotice/";
     if($todo == "resv_notice"){
         $user_id = 3;
@@ -11,23 +12,31 @@
         $Edetail = $_POST["Edetail"];
         $nId = json_decode($_POST['Enotice']);
         $Eimage = $_FILES["Eimage"]['name'];
-        
+        $today = date("Y-m-d");
+       
         $str_notice = implode("_", $nId); // nId1_nId2_nId3
             
         $filename = time().'_'.rand(1, 9999).'.'.end(explode(".", $Eimage));
          
         $pathImage = $pathImage. basename($filename);
-        $ins_revs = "INSERT INTO event (user_id, nIds, eName, eStart, eEnd, eOut, eImage, eDetail, status)"
+        $ins_revs = "INSERT INTO event (user_id, nIds, eName, eStart, eEnd, eOut, eImage, eDetail, status, revs_date)"
                      ."VALUES('".$user_id."', '".$str_notice."', '".$Ename."', '".$Estart."', '".$Eend."', '".$Eout."',"
-                     . "'".$pathImage."', '".$Edetail."', 'wait')";
+                     . "'".$pathImage."', '".$Edetail."', 'wait', '".$today."')";
         
         if(move_uploaded_file($_FILES['Eimage']['tmp_name'], $pathImage)){
             if($conn->query($ins_revs)){
-               echo '<label style="color:#4CAF50;">เพิ่มป้ายในระบบสำเร็จ</label>';
+                $sql_sel_eId = "select eId from event where eName = '".$Ename."'";
+                $result_eId = $conn->query($sql_sel_eId);
+                $rs = $result_eId->fetch_array();
+               echo '<label>'.$rs.'</label>';
             }else{
                 echo "Error:  <br>";
             }
         }
+    }
+    
+    function isAjax() {
+        return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
     }
     
     
@@ -84,47 +93,119 @@
     if($todo == "check_notice"){
         $sDate = $_POST['sDate'];
         $oDate = $_POST['oDate'];
+        $nId = json_decode($_POST['nName']);
+        
+        $str_not = implode(",", $nId);
+
+        $arr_nId = array();
+        $arr_nId = check_equals_notice($str_not, $conn, $sDate, $oDate);
+        
+        list($Syear, $Smonth, $Sday) = split("-", $sDate);
+        list($Oyear, $Omonth, $Oday) = split("-", $oDate);
+        
+        if(count($arr_nId)>0){
+            for($i=0;$i<count($arr_nId);$i++){
+                $sql_sel_event = "select nName from local_notice where nId = ".$arr_nId[$i];
+                $result_event = $conn->query($sql_sel_event);
+                $rs = $result_event->fetch_array();
+                    echo '<label>'.$rs[0].'</label> <label style="color:#64DD17;"> สามารถใช้ได้ในวันที่ </label> ';
+                    echo '<label>'.$Sday.' '.change_mount($Smonth).' '.changeYear($Syear).' ถึง '.$Oday.' '.change_mount($Omonth).' '.changeYear($Oyear);
+                    echo '</label><br>';
+            }
+        }else{
+            echo '<label style="color:#64DD17;"> ทุกป้ายสามารถใช้ได้ในวันที่ </label> ';
+            echo '<label>'.$Sday.' '.change_mount($Smonth).' '.changeYear($Syear).' ถึง '.$Oday.' '.change_mount($Omonth).' '.changeYear($Oyear).'';
+        }
        
         //เช็คแช่วงวันที่นี้มีป้ายไหนถูกใช้บ้าง
-        $sql_sel_event = "SELECT nIds, eStart, eOut FROM event WHERE eStart <= '".$oDate."' AND eOut >='".$sDate."'";
-        $result_event = $conn->query($sql_sel_event);
-        if($result_event->num_rows){
-            echo '<div class="table-responsive">';
-                echo '<table class="table table-striped table-bordered table-hover" id="dataTables-example">';
-                    echo '<col width="100">';
-                    echo '<col width="100">';
-                    echo '<col width="100">';
-                    echo '<thead>';
-                        echo '<tr>';
-                            echo '<th>ชื่อป้าย</th>';
-                            echo '<th>วันเริ่ม</th>';
-                            echo '<th>วันรื้อถอน</th>';
-                        echo '</tr>';
-                    echo '</thead>';
-                    echo '<tbody>';
-                    while ($rs_event = $result_event->fetch_array()){
-                        $notice = explode("_",$rs_event[0]);
-                        list($Syear, $Smonth, $Sday) = split("-", $rs_event[1]);
-                        list($Oyear, $Omonth, $Oday) = split("-", $rs_event[2]);
-                        for($i=0;$i<count($notice);$i++){
-                            $sql_sel_notice = "SELECT nName FROM local_notice WHERE nId =".$notice[$i];
-                            $result_notice = $conn->query($sql_sel_notice);
-                            $notice_name = $result_notice->fetch_array();
-                                echo '<tr>';
-                                    echo '<td>'.$notice_name[0].'</td> ';
-                                    echo '<td>'.$Sday.' '.  change_mount($Smonth).' '.  changeYear($Syear).'</td> ';
-                                    echo '<td>'.$Oday.' '.  change_mount($Omonth).' '.  changeYear($Oyear).'</td>';
-                                echo '</tr>';
-                        }
-                    }
-                    echo '<tbody>';
-                echo '</table>';
-            echo '</div>';
-        }else{
-            echo '<label style="color:#64DD17;">วันที่เลือกไม่มีป้ายถูกใช้</label>';
-        }         
+//        $sql_sel_event = "SELECT nIds, eStart, eOut FROM event WHERE eStart <= '".$oDate."' AND eOut >='".$sDate."'";
+//        $result_event = $conn->query($sql_sel_event);
+//        if($result_event->num_rows){
+//            echo '<div class="table-responsive">';
+//                echo '<table class="table table-striped table-bordered table-hover" id="dataTables-example">';
+//                    echo '<col width="100">';
+//                    echo '<col width="100">';
+//                    echo '<col width="100">';
+//                    echo '<thead>';
+//                        echo '<tr>';
+//                            echo '<th>ชื่อป้าย</th>';
+//                            echo '<th>วันเริ่ม</th>';
+//                            echo '<th>วันรื้อถอน</th>';
+//                        echo '</tr>';
+//                    echo '</thead>';
+//                    echo '<tbody>';
+//                    while ($rs_event = $result_event->fetch_array()){
+//                        $notice = explode("_",$rs_event[0]);
+//                        list($Syear, $Smonth, $Sday) = split("-", $rs_event[1]);
+//                        list($Oyear, $Omonth, $Oday) = split("-", $rs_event[2]);
+//                        for($i=0;$i<count($notice);$i++){
+//                            $sql_sel_notice = "SELECT nName FROM local_notice WHERE nId =".$notice[$i];
+//                            $result_notice = $conn->query($sql_sel_notice);
+//                            $notice_name = $result_notice->fetch_array();
+//                                echo '<tr>';
+//                                    echo '<td>'.$notice_name[0].'</td> ';
+//                                    echo '<td>'.$Sday.' '.  change_mount($Smonth).' '.  changeYear($Syear).'</td> ';
+//                                    echo '<td>'.$Oday.' '.  change_mount($Omonth).' '.  changeYear($Oyear).'</td>';
+//                                echo '</tr>';
+//                        }
+//                    }
+//                    echo '<tbody>';
+//                echo '</table>';
+//            echo '</div>';
+//        }else{
+//            echo '<label style="color:#64DD17;">วันที่เลือกไม่มีป้ายถูกใช้</label>';
+//        }         
     }
     
+    
+    function check_equals_notice($nId, $conn, $sDate, $oDate){
+        $sql_sel_nId = "SELECT eId, nIds FROM event WHERE eStart <= '".$oDate."' AND eOut >='".$sDate."'";
+        list($Syear, $Smonth, $Sday) = split("-", $sDate);
+        list($Oyear, $Omonth, $Oday) = split("-", $oDate);
+        
+        
+        $arr_nId = explode(",", $nId);
+        $result = $conn->query($sql_sel_nId);
+        $arr_eId = array();
+        $temp_arr = array();
+        
+        $k = 0;
+        $l = 0;
+        $cou = 1;
+        while ($rs = $result->fetch_array()){
+            $ev_nId = explode("_", $rs[1]);
+                for($j=0;$j<count($arr_nId);$j++){
+                    if(in_array($arr_nId[$j], $ev_nId)){
+                        // ป้ายไม่สามารถใช้ได้
+                        $sql_sel_notice = "select nName from local_notice where nId =".$arr_nId[$j];
+                        $result_notice = $conn->query($sql_sel_notice);
+                        $row = $result_notice->fetch_array();
+                        $temp_arr[$l] = $arr_nId[$j];
+                        $l++;
+                            echo $cou.'.<label>'.$row[0].'</label> <label style="color:red;"> ไม่สามารถใช้ได้ในวันที่ </label> ';
+                            echo '<label>'.$Sday.' '.change_mount($Smonth).' '.changeYear($Syear).' ถึง '.$Oday.' '.change_mount($Omonth).' '.changeYear($Oyear);
+                            echo '</label><br>';
+                            $cou++;
+                    }else{
+                        //ป้ายสามารถใข้ได้
+                        if(!in_array($arr_nId[$j], $arr_eId)){
+                            $arr_eId[$k] = $arr_nId[$j];
+                            $k++;
+                       }
+                    }
+                }
+        }
+        
+        $arr_eId = array_diff($arr_eId, $temp_arr);
+        
+        return array_values($arr_eId);
+    }
+
+
+
+
+
+
     function change_mount($mount){
                                             if($mount == '01'){
                                                 return 'ม.ค.';
@@ -159,11 +240,12 @@
     
     
     function check_date_overlap($sDateA,$sDateB,$eDateA,$eDateB){
+        echo $sDateA.' '.$eDateA.''.$sDateB.''.$eDateB.'<br>';
         if(($sDateA <= $eDateB) && ($eDateA >= $sDateB)){
-            return true;
+           return "overlap";
+        }else{
+           return "unoverlap";
         }
-        
-        return false;
     }
     
 ?>
