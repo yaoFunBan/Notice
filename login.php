@@ -1,5 +1,6 @@
 <?php
   include './conn.php';
+  session_start();
 ?>
 <!DOCTYPE html>
 <html>
@@ -36,20 +37,23 @@
                         <form role="form" action="assets/Auth/LdapConn.php" method="POST">
                             <fieldset>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="รหัสเข้าใช้งานอินเตอร์เน็ต" name="Login[Username]" id="username" class="username" type="text" autofocus>
+                                    <input class="form-control" placeholder="Email" name="user" id="username" class="username" type="text" autofocus>
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Password" name="Login[Password]" type="password" value="">
+                                    <input class="form-control" placeholder="Password" name="password" id="password" type="password" value="">
                                 </div>
-                                <button class="btn btn-lg btn-success btn-block" type="submit" >Login</button>
+                                <div class="form-group">
+                                    <button class="btn btn-lg btn-success btn-block" type="button" onclick="login()">Login</button>
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-lg btn-outline btn-primary btn-block" type="button" onclick="window.location.href='register.php'">สมัครสมาชิก</button>
+                                </div>
+                                <label style="text-align: center; color: red">ผู้ใช้จะต้องทำการสมัครสมาชิกก่อน</label>
                             </fieldset>
+                             <div id="show"></div>
                         </form>
                     </div>
-                    <div id="row">
-                        <label style="margin:5px 5px;">**เข้าสู่ระบบด้วยรหัสเข้าใช้อินเตอร์เน็ตของมหาวิทยาลัยขอนแก่น</label>
-                    </div>
                 </div>
-                <div id="show"></div>
             </div>
         </div>
     </div>
@@ -58,23 +62,35 @@
     <script src="assets/plugins/jquery-1.10.2.js"></script>
     <script src="assets/plugins/bootstrap/bootstrap.min.js"></script>
     <script src="assets/plugins/metisMenu/jquery.metisMenu.js"></script>
+    
+    <script type="text/javascript">
+          function login(){
+              var email = document.getElementById("username").value;
+              var pass = document.getElementById("password").value;
+              var status = '';
+              $.ajax({
+                    url: 'user_sql.php',
+                    type: 'post',
+                    data: {
+                        todo : "login",
+                        email : email,
+                        pass : pass
+                    },
+                    success: function (data) {
+                        status = data+"";
+                        if(status.length == 6){
+                            document.getElementById("show").innerHTML = "Email ผิดหรือ รหัสผู้ใช้ผิดกรุณาตรวจสอบ";
+                             document.getElementById("show").style.color = "red";   
+                        }else{
+//                            document.getElementById("show").innerHTML = data;  
+                            window.location.href = "index.php";
+                        }
+                        
+                   }
+               });
+          }
+    
+    </script>
 
 </body>
-//<?php
-//    if(isset($_POST['username'])){
-//        $user = $_POST['username'];
-//        $sql_check_user = "SELECT * FROM profile WHERE user_name ='".$user."' ";
-//        $result = $conn->query($sql_check_user);
-////        $result->execute();
-////        echo $result->fetchColumn();
-//        if($result->num_rows){
-//            $row = $result->fetch_array();
-//            header("Location:index.php");
-//             echo $row[5];
-//        }else{
-////            echo 'dddd';
-//            header("Location:loginf.php");
-//        }
-//    }
-//?>
 </html>

@@ -1,5 +1,17 @@
 <?php
  include "conn.php";
+ if(isset($_GET['userId'])){
+     $eid = $_GET['eId'];
+     $userId = $_GET['userId'];
+     
+     $sql_sel_user = "SELECT * FROM profile WHERE user_id = ".$userId;
+     $result = $conn->query($sql_sel_user);
+     $row_user = $result->fetch_array();  
+     
+ }else{
+     header("Location: login.php");
+ }
+ 
 ?>
 
 <!DOCTYPE html>
@@ -45,25 +57,30 @@
         </div>
         <!-- end navbar-header -->
         <!-- navbar-top-links -->
-        <ul class="nav navbar-top-links navbar-right">
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="fa fa-user fa-3x"></i>
-                </a>
-                <!-- dropdown user-->
-                <ul class="dropdown-menu dropdown-user">
-                    <li><a href="profile_user.php"><i class="fa fa-user fa-fw"></i>โปรไฟล์</a>
-                    </li>
-                    <li><a href="list_event_user.php"><i class="fa fa-gear fa-fw"></i>รายการจองป้าย</a>
-                    </li>
-                    <li class="divider"></li>
-                    <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i>Logout</a>
-                    </li>
-                </ul>
-                <!-- end dropdown-user -->
-            </li>
-            <!-- end main dropdown -->
-        </ul>
+            <?php 
+                echo '<ul class="nav navbar-top-links navbar-right">';
+                    echo '<li class="dropdown">';
+                        echo '<a class="dropdown-toggle" data-toggle="dropdown" href="#">';
+                            echo '<i class="fa fa-user fa-3x"></i>';
+                        echo '</a>';
+//                        <!-- dropdown user-->
+                        echo '<ul class="dropdown-menu dropdown-user">';
+                            echo '<li><a href="profile_user.php"><i class="fa fa-user fa-fw"></i>';
+                                echo 'โปรไฟล์';
+                                $_SESSION['user_id'] = $row_user[0];
+                            echo '</a></li>';
+                            echo '<li><a href="list_event_user.php?userId="'.$row_user[0].'"><i class="fa fa-gear fa-fw"></i>รายการจองป้าย</a>';
+                            echo '</li>';
+                            echo '<li class="divider"></li>';
+                            echo '<li><a href="logout.php"><i class="fa fa-sign-out fa-fw"></i>Logout</a>';
+                            echo '</li>';
+                            echo '</ul>';
+//                        <!-- end dropdown-user -->
+                    echo '</li>';
+//                    <!-- end main dropdown -->
+            echo '</ul>';
+//        <!-- end navbar-top-links -->
+        ?>
         <!-- end navbar-top-links -->
 
     </nav>
@@ -77,57 +94,103 @@
             <ul class="nav" id="side-menu">
                 <li>
                     <!-- user image section-->
-                    <div class="user-section">
-                        <div class="user-section-inner">
-                            <img src="assets/img/user.jpg" alt="">
-                        </div>
-                        <div class="user-info">
-                            <div>Jonny <strong>Deen</strong></div>
-                            <div class="user-text-online">
-                                <span class="user-circle-online btn btn-success btn-circle "></span>&nbsp;Online
-                            </div>
-                        </div>
-                    </div>
+                    <?php
+                            echo '<div class="user-section">';
+                                echo '<div class="user-section-inner">';
+                                    echo '<img src="assets/img/user.jpg" alt="">';
+                                echo '</div>';
+                                echo '<div class="user-info">';
+                                    echo '<div><strong>'.$row_user[2].'</strong></div>';
+                                    echo '<div class="user-text-online">';
+                                        echo '<span class="user-circle-online btn btn-success btn-circle "></span>&nbsp;Online';
+                                    echo '</div>';
+                                echo '</div>';
+                            echo '</div>';
+                    ?>
                     <!--end user image section-->
                 </li>
 
                 <li>
-                    <a href="#"><i class="fa fa-home fa-fw"></i>หน้าแรก</a>
+                    <a href="index.php"><i class="fa fa-home fa-fw"></i>
+                        หน้าแรก
+                        <?php 
+                            if(isset($_SESSION['user_id'])){
+                                $_SESSION['user_id'] = $row_user[0];
+                            }
+                        ?>
+                    </a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-calendar fa-fw"></i> ตารางการใช้ป้าย</a>
+                    <a href="list_revs_notice.php"><i class="fa fa-calendar fa-fw"></i> 
+                        ตารางการใช้ป้าย
+                        <?php 
+                            if(isset($_SESSION['user_id'])){
+                                $_SESSION['user_id'] = $row_user[0];
+                            }
+                        ?>
+                    </a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-lock fa-fw"></i> เข้าสู่ระบบ</a>
-                </li>
-
-                <li>
-                    <a href="#"><i class="fa fa-book fa-fw"></i>คู่มือการใช้งานระบบ</a>
-                </li>
-                <li class="selected">
-                    <a href="#"><i class="fa fa-table fa-fw"></i>แบบฟอร์มการจองป้าย</a>
+                    <a href="login.php"><i class="fa fa-lock fa-fw"></i> เข้าสู่ระบบ</a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-book fa-fw"></i> ผู้ดูแลระบบ<span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
-                        <li>
-                            <a href="manage_Res_Event.php">จัดการการจอง</a>
-                        </li>
-                        <li>
-                            <a href="manageNotice.php">เพิ่ม/ลบ/แก้ไขป้าย</a>
-                        </li>
-                        <li>
-                            <a href="editDoc.php">เพิ่ม/ลบ/แก้ไขเอกสาร</a>
-                        </li>
-                        <li>
-                            <a href="manageNews.php">เพิ่ม/แก้ไข/ลบ ประชาสัมพันธ์</a>
-                        </li>
-                        <li>
-                            <a href="#">สถิติ</a>
-                        </li>
-                    </ul>
-                    <!-- second-level-items -->
+                    <?php
+                        echo '<a href="Res_Notice.php"><i class="fa fa-table fa-fw"></i>';
+                            echo 'แบบฟอร์มการจองป้าย';
+                               $_SESSION['user_id'] = $row_user[0];
+                        echo '</a>';
+                    ?>
                 </li>
+                <?php
+                    if($row_user[8] != "user"){
+                        echo '<li>';
+                            echo '<a href="#"><i class="fa fa-book fa-fw"></i> ผู้ดูแลระบบ<span class="fa arrow"></span></a>';
+                            echo '<ul class="nav nav-second-level">';
+                                echo '<li>';
+                                    echo '<a href="#"><i class="fa fa-book fa-fw"></i>จัดการการจอง<span class="fa arrow"></span></a>';
+                                    echo '<ul class="nav nav-third-level">';
+                                        echo '<li>';
+                                            echo '<a href="manage_Res_Event.php">';
+                                                echo 'ยังไม่อนุมัติ';
+                                                $_SESSION['user_id'] = $row_user[0];
+                                            echo '</a>';
+                                        echo '</li>';
+                                        echo '<li>';
+                                            echo '<a href="manage_res_accept.php">';
+                                                echo 'อนุมัติแล้ว';
+                                                $_SESSION['user_id'] = $row_user[0];
+                                            echo '</a>';
+                                        echo '</li>';
+                                    echo '</ul>';
+                                echo '</li>';
+                                echo '<li>';
+                                    echo '<a href="manageNotice.php">';
+                                        echo 'เพิ่ม/ลบ/แก้ไขป้าย';
+                                        $_SESSION['user_id'] = $row_user[0];
+                                    echo '</a>';
+                                echo '</li>';
+                                echo '<li>';
+                                    echo '<a href="editDoc.php">';
+                                        echo 'เพิ่ม/ลบ/แก้ไขเอกสาร';
+                                        $_SESSION['user_id'] = $row_user[0];
+                                    echo '</a>';
+                                echo '</li>';
+                                echo '<li>';
+                                    echo '<a href="manageNews.php">';
+                                        echo 'เพิ่ม/แก้ไข/ลบ ประชาสัมพันธ์';
+                                          $_SESSION['user_id'] = $row_user[0];
+                                    echo '</a>';
+                                echo '</li>';
+                                echo '<li>';
+                                    echo '<a href="Manual.php">';
+                                        echo 'คู่มือการใช้งานระบบ';
+                                          $_SESSION['user_id'] = $row_user[0];
+                                    echo '</a>';
+                                echo '</li>';
+                            echo '</ul>';
+                        echo '</li>';
+                    }
+                ?>
             </ul>
             <!-- end side-menu -->
         </div>
@@ -182,7 +245,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label>วันรื้อถอน</label>
-                                            <input class="form-control" name="outevent" id="outevent" value="<?php echo $row[6]?>">
+                                            <input class="form-control" name="outevent" id="outevent" readonly value="<?php echo $row[6]?>">
                                         </div>
                                         
                                     <?php
@@ -208,6 +271,13 @@
                                                     }
                                                 ?>
                                             </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="button" class="btn tn btn-outline btn-success" onclick="checkDateOverlap()">เช็คป้าย</button>
+                                            <label>*กรุณาเลือกวันเริ่มติดตั้งและวันรื้อถอนและป้ายก่อนเช็คป้าย</label>
+                                        </div>
+                                        <div class="form-group">
+                                            <div id="show_repos"></div>
                                         </div>
                                         <div class="form-group">
                                             <div class="fileinput fileinput-new" data-provides="fileinput">
@@ -297,7 +367,7 @@
             language: "th",
             autoclose: true,
             todayHighlight: true,
-            dateFormat: 'yy/mm/dd',
+            dateFormat: 'yy-mm-dd',
             onSelect: function(selected) {
               $("#txtToDate").datepicker("option","minDate", selected);
             }
@@ -308,23 +378,36 @@
             language: "th",
             autoclose: true,
             todayHighlight: true,
-            dateFormat: 'yy/mm/dd',
+            dateFormat: 'yy-mm-dd',
             onSelect: function(selected) {
-               $("#txtFromDate").datepicker("option","maxDate", selected);    
-             }
+               $("#txtFromDate").datepicker("option","maxDate", selected);
+               var outDate = $("#txtToDate").datepicker('getDate');
+               outDate.setDate(outDate.getDate()+3);
+               
+               $("#outevent").datepicker('setDate', outDate);
+//               $("input[name='test']").val(selected);
+            }  
         });
     });
-    
     
 </script>
 <script type="text/javascript">
     $(function () {
         $("#outevent").datepicker({
-            todayBtn: "linked",
-            language: "th",
-            autoclose: true,
-            todayHighlight: true,
-            dateFormat: 'yy/mm/dd' 
+            dateFormat: 'yy-mm-dd',
+            beforeShow: function (input, inst) 
+            { 
+                if($(input).attr('readonly') !== undefined ) {
+                    if(inst.o_dpDiv === undefined) {
+                        inst.o_dpDiv = inst.dpDiv;
+                    }
+                    inst.dpDiv = $('<div style="display: none;"></div>');
+                } else {
+                    if(inst.o_dpDiv !== undefined) {
+                        inst.dpDiv = inst.o_dpDiv;
+                    }
+                }
+            }
         });
     });
 </script>
@@ -332,6 +415,7 @@
 <script type="text/javascript">
         function updateEvent(){
             var eId = "<?php Print($eId)?>";
+            var userId = "<?php Print($userId)?>";
             var Ename = $("#naem_event").val();
             var Estart = $("#txtFromDate").val();
             var Eend = $("#txtToDate").val();
@@ -364,7 +448,7 @@
                    success: function (data) {
                         document.getElementById("show").innerHTML = data;
                         setTimeout(function (){
-                            window.location.href = "manage_Res_Event.php";
+                            window.location.href = "list_event_user.php?userId="+userId;
                         },2000);
                   }
                 });   
@@ -392,12 +476,36 @@
                    processData: false,
                    success: function (data) {
                         setTimeout(function (){
-                          document.location.href = "manage_Res_Event.php";
+                          window.location.href = "list_event_user.php?userId="+userId;
                         },2000);
                          document.getElementById("show").innerHTML = data;
                   }
                 }); 
             }
+        }
+        
+        function checkDateOverlap(){
+            var star_date = $("#txtFromDate").val();
+            var out_date = $("#outevent").val();
+            var Enotice = $("#sel_notice").val();
+            var array = $.map(Enotice, function (value, index) {
+                return [value];
+            });
+            var json_arr = JSON.stringify(array);
+            
+            $.ajax({
+               url : "manageEvent.php",
+               type: 'POST',
+               data: {
+                   todo : "check_notice",
+                   sDate: star_date,
+                   oDate: out_date,
+                   nName: json_arr
+               },
+               success: function (data) {
+                  document.getElementById("show_repos").innerHTML = data;
+               }
+            });
         }
     </script>
 

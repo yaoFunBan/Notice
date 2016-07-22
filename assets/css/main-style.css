@@ -60,16 +60,16 @@ color: #FFFFFF;
 padding: 20px 15px;
 }
 #side-menu {
-    background-color:#04B173;
+    background-color:#ffffff;
 }
 
  #side-menu a {
-            color:#fff;
-           border-bottom: 1px solid #84B899 !important;
+            color:#000;
+           border-bottom: 1px solid #00657b !important;
            height: 55px;
         }
         .selected {
-            background-color:rgb(83, 163, 163);
+            background-color:rgb(130, 196, 226);
         }
 /* back colors */
         .blue {

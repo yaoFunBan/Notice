@@ -91,6 +91,14 @@
                                 <input class="form-control" name="user_lname" id="user_lname" placeholder="กรุณากรอกนามสกุล">
                             </div>
                             <div class="form-group">
+                                <label>นามสกุล</label>
+                                <input class="form-control" name="user_lname" id="user_lname" placeholder="กรุณากรอกนามสกุล">
+                            </div>
+                            <div class="form-group">
+                                <label>นามสกุล</label>
+                                <input class="form-control" name="user_lname" id="user_lname" placeholder="กรุณากรอกนามสกุล">
+                            </div>
+                            <div class="form-group">
                                 <label>หน่วยงาน/คณะ</label>
                                 <input class="form-control" name="user_depart" id="user_depart" placeholder="กรุณากรอกหน่วยงาน/คณะ">
                             </div>

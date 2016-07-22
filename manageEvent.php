@@ -4,7 +4,7 @@
     $k = 0;    
     $pathImage = "exampleNotice/";
     if($todo == "resv_notice"){
-        $user_id = 3;
+        $user_id = $_POST['user_id'];
         $Ename = $_POST["Ename"];
         $Estart = $_POST["Estart"];
         $Eend = $_POST["Eend"];
@@ -25,10 +25,10 @@
         
         if(move_uploaded_file($_FILES['Eimage']['tmp_name'], $pathImage)){
             if($conn->query($ins_revs)){
-                $sql_sel_eId = "select eId from event where eName = '".$Ename."'";
-                $result_eId = $conn->query($sql_sel_eId);
-                $rs = $result_eId->fetch_array();
-               echo '<label>'.$rs.'</label>';
+                $sql_sel_eid = "select eId from event where eName = '".$Ename."'";
+                $result_query = $conn->query($sql_sel_eid);
+                $row_eId = $result_query->fetch_array();
+                echo $row_eId[0];
             }else{
                 echo "Error:  <br>";
             }
@@ -102,8 +102,9 @@
         
         list($Syear, $Smonth, $Sday) = split("-", $sDate);
         list($Oyear, $Omonth, $Oday) = split("-", $oDate);
-        
-        if(count($arr_nId)>0){
+
+//        echo count($arr_nId);
+        if((count($arr_nId)>0 ) && $arr_nId[0] != "overlap" && $arr_nId[0] != "unoverlap"){
             for($i=0;$i<count($arr_nId);$i++){
                 $sql_sel_event = "select nName from local_notice where nId = ".$arr_nId[$i];
                 $result_event = $conn->query($sql_sel_event);
@@ -112,7 +113,7 @@
                     echo '<label>'.$Sday.' '.change_mount($Smonth).' '.changeYear($Syear).' ถึง '.$Oday.' '.change_mount($Omonth).' '.changeYear($Oyear);
                     echo '</label><br>';
             }
-        }else{
+        }else if($arr_nId[0] == "unoverlap" || count($arr_nId) == 0){
             echo '<label style="color:#64DD17;"> ทุกป้ายสามารถใช้ได้ในวันที่ </label> ';
             echo '<label>'.$Sday.' '.change_mount($Smonth).' '.changeYear($Syear).' ถึง '.$Oday.' '.change_mount($Omonth).' '.changeYear($Oyear).'';
         }
@@ -172,33 +173,52 @@
         $k = 0;
         $l = 0;
         $cou = 1;
-        while ($rs = $result->fetch_array()){
-            $ev_nId = explode("_", $rs[1]);
-                for($j=0;$j<count($arr_nId);$j++){
-                    if(in_array($arr_nId[$j], $ev_nId)){
-                        // ป้ายไม่สามารถใช้ได้
-                        $sql_sel_notice = "select nName from local_notice where nId =".$arr_nId[$j];
-                        $result_notice = $conn->query($sql_sel_notice);
-                        $row = $result_notice->fetch_array();
-                        $temp_arr[$l] = $arr_nId[$j];
-                        $l++;
-                            echo $cou.'.<label>'.$row[0].'</label> <label style="color:red;"> ไม่สามารถใช้ได้ในวันที่ </label> ';
-                            echo '<label>'.$Sday.' '.change_mount($Smonth).' '.changeYear($Syear).' ถึง '.$Oday.' '.change_mount($Omonth).' '.changeYear($Oyear);
-                            echo '</label><br>';
-                            $cou++;
-                    }else{
-                        //ป้ายสามารถใข้ได้
-                        if(!in_array($arr_nId[$j], $arr_eId)){
-                            $arr_eId[$k] = $arr_nId[$j];
-                            $k++;
-                       }
+        if($result->num_rows){
+            while ($rs = $result->fetch_array()){
+                $ev_nId = explode("_", $rs[1]);
+                    for($j=0;$j<count($arr_nId);$j++){
+                        if(in_array($arr_nId[$j], $ev_nId)){
+                            // ป้ายไม่สามารถใช้ได้
+                            if(!in_array($arr_nId[$j], $temp_arr)){
+                                $sql_sel_notice = "select nName from local_notice where nId =".$arr_nId[$j];
+                                $result_notice = $conn->query($sql_sel_notice);
+                                $row = $result_notice->fetch_array();
+                                $temp_arr[$l] = $arr_nId[$j];
+                                $l++;
+                                    echo $cou.'.<label>'.$row[0].'</label> <label style="color:red;"> ไม่สามารถใช้ได้ในวันที่ </label> ';
+                                    echo '<label>'.$Sday.' '.change_mount($Smonth).' '.changeYear($Syear).' ถึง '.$Oday.' '.change_mount($Omonth).' '.changeYear($Oyear);
+                                    echo '</label><br>';
+                                    $cou++;
+                            }
+                        }else{
+                            //ป้ายสามารถใข้ได้
+                            if(!in_array($arr_nId[$j], $arr_eId)){
+                                $arr_eId[$k] = $arr_nId[$j];
+                                $k++;
+                           }
+                        }
                     }
-                }
+            }
+        }else{
+           return array_values($arr_eId);
         }
         
+//        if($k > 0){
+//            $arr_eId = array_diff($arr_eId, $temp_arr);
+//            return array_values($arr_eId);
+//        }
+
         $arr_eId = array_diff($arr_eId, $temp_arr);
-        
-        return array_values($arr_eId);
+        array_values($arr_eId);
+        if((count($arr_eId) == 0 )&& (count($arr_nId)) == count($temp_arr)){
+  //            echo "overlap";
+              return $arr_eId = array("overlap"); 
+        }else if((count($arr_nId)) == count($arr_eId)){
+  //            echo 'unoverlap';
+              return $arr_eId = array("unoverlap");
+        }else{
+            return array_values($arr_eId);;
+        }
     }
 
 

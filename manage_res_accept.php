@@ -1,5 +1,6 @@
 <?php
  include "conn.php";
+ 
  session_start();
  if(isset($_SESSION['user_id'])){
      
@@ -11,7 +12,6 @@
  }else{
      header("Location: login.php");
  }
- 
 ?>
 
 <!DOCTYPE html>
@@ -72,6 +72,7 @@
             echo '</ul>';
 //        <!-- end navbar-top-links -->
         ?>
+
     </nav>
     <!-- end navbar top -->
 
@@ -82,7 +83,7 @@
             <!-- side-menu -->
             <ul class="nav" id="side-menu">
                 <li>
-                   <?php
+                <?php
                             echo '<div class="user-section">';
                                 echo '<div class="user-section-inner">';
                                     echo '<img src="assets/img/user.jpg" alt="">';
@@ -95,7 +96,6 @@
                                 echo '</div>';
                             echo '</div>';
                     ?>
-                    <!--end user image section-->
                 </li>
 
                 <li>
@@ -131,20 +131,20 @@
                 </li>
                 <?php
                     if($row_user[8] != "user"){
-                        echo '<li li class="active">';
+                        echo '<li class="active">';
                             echo '<a href="#"><i class="fa fa-book fa-fw"></i> ผู้ดูแลระบบ<span class="fa arrow"></span></a>';
                             echo '<ul class="nav nav-second-level">';
                                 echo '<li class="active">';
                                     echo '<a href="#"><i class="fa fa-book fa-fw"></i>จัดการการจอง<span class="fa arrow"></span></a>';
                                     echo '<ul class="nav nav-third-level">';
-                                        echo '<li  class="selected">';
-                                            echo '<a href="#">ยังไม่อนุมัติ</a>';
-                                        echo '</li>';
                                         echo '<li>';
-                                            echo '<a href="manage_res_accept.php">';
-                                                echo 'อนุมัติแล้ว';
+                                            echo '<a href="manage_Res_Event.php">';
+                                                echo 'ยังไม่อนุมัติ';
                                                 $_SESSION['user_id'] = $row_user[0];
                                             echo '</a>';
+                                        echo '</li>';
+                                        echo '<li class="selected">';
+                                            echo '<a href="#.php">อนุมัติแล้ว</a>';
                                         echo '</li>';
                                     echo '</ul>';
                                 echo '</li>';
@@ -195,7 +195,7 @@
             <!-- Advanced Tables -->
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                             รายการการจองป้าย (ยังไม่อนุมัติ/เลขเวลากำหนด)
+                             รายการการจองป้าย (อนุมัติแล้ว)
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
@@ -273,7 +273,7 @@
                                     ?>
                                     <tbody>
                                         <?php
-                                            $sql_sel_event = "SELECT * FROM event where status != 'accept'";
+                                            $sql_sel_event = "SELECT * FROM event where status = 'accept'";
                                             $result = $conn->query($sql_sel_event);
                                             while ($rows = $result->fetch_array()){
                                             list($Syear, $Smonth, $Sday) = split("-", $rows[4]);
@@ -284,11 +284,6 @@
                                                 echo '<tr class="odd gradeX">';
                                                     echo '<td>';
                                                         echo '<a href="Detail_event.php?eId='.$rows[0].'" alt="รายละเอียด" title="รายละเอียด">'.$rows[3].'<br>';
-                                                        if($rows[10] < date('Y-m-d', strtotime('-3 days'))){
-                                                            echo '<label style="color:red;">*ป้ายเลยกำหนดเวลาการยืนเอกสาร</label>';
-                                                            $sql_update_event = "update event set status='time out' where eId = ".$rows[0];
-                                                            $result_update = $conn->query($sql_update_event);
-                                                        }
                                                     echo '</td>';
                                                     echo '<td>';
                                                         echo '<ol>';
@@ -307,9 +302,7 @@
                                                                  $_SESSION['user_id'] = $row_user[0];
                                                                 echo '</button>';
                                                             echo '</a>';
-                                                            echo '<br>';
-                                                        echo '<button class="btn btn-outline btn-success" type="button" style="margin:5px;" onclick="update_status_accept('.$rows[0].')">อนุมัติ</button><br>';
-                                                        echo '<button class="btn btn-outline btn-danger" type="button" style="margin:5px;" onclick="update_status_unaccept('.$rows[0].')">ไม่อนุมัติ</button>';
+                                                        echo '<br>';
                                                     echo '</td>';
                                                 echo '</tr>';
                                             }

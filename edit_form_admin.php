@@ -1,5 +1,11 @@
 <?php
  include "conn.php";
+ session_start(); 
+ if(isset($_SESSION['user_id'])){
+     $sql_sel_user = "SELECT * FROM profile WHERE user_id = ".$_SESSION['user_id'];
+     $result = $conn->query($sql_sel_user);
+     $row_user = $result->fetch_array();     
+ }
 ?>
 
 <!DOCTYPE html>
@@ -43,29 +49,28 @@
                 <img src="assets/img/logo.png" alt=""/>
             </a>
         </div>
-        <!-- end navbar-header -->
-        <!-- navbar-top-links -->
-        <ul class="nav navbar-top-links navbar-right">
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="fa fa-user fa-3x"></i>
-                </a>
-                <!-- dropdown user-->
-                <ul class="dropdown-menu dropdown-user">
-                    <li><a href="profile_user.php"><i class="fa fa-user fa-fw"></i>โปรไฟล์</a>
-                    </li>
-                    <li><a href="list_event_user.php"><i class="fa fa-gear fa-fw"></i>รายการจองป้าย</a>
-                    </li>
-                    <li class="divider"></li>
-                    <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i>Logout</a>
-                    </li>
-                </ul>
-                <!-- end dropdown-user -->
-            </li>
-            <!-- end main dropdown -->
-        </ul>
-        <!-- end navbar-top-links -->
-
+        <?php 
+                echo '<ul class="nav navbar-top-links navbar-right">';
+                    echo '<li class="dropdown">';
+                        echo '<a class="dropdown-toggle" data-toggle="dropdown" href="#">';
+                            echo '<i class="fa fa-user fa-3x"></i>';
+                        echo '</a>';
+//                        <!-- dropdown user-->
+                        echo '<ul class="dropdown-menu dropdown-user">';
+                            echo '<li><a href="profile_user.php"><i class="fa fa-user fa-fw"></i>';
+                                echo 'โปรไฟล์';
+                                $_SESSION['user_id'] = $row_user[0];
+                            echo '</a>';
+                            echo '</li>';
+                            echo '<li class="divider"></li>';
+                            echo '<li><a href="logout.php"><i class="fa fa-sign-out fa-fw"></i>Logout</a>';
+                            echo '</li>';
+                            echo '</ul>';
+//                        <!-- end dropdown-user -->
+                    echo '</li>';
+//                    <!-- end main dropdown -->
+            echo '</ul>';
+        ?>
     </nav>
     <!-- end navbar top -->
 
@@ -76,58 +81,97 @@
             <!-- side-menu -->
             <ul class="nav" id="side-menu">
                 <li>
-                    <!-- user image section-->
-                    <div class="user-section">
-                        <div class="user-section-inner">
-                            <img src="assets/img/user.jpg" alt="">
-                        </div>
-                        <div class="user-info">
-                            <div>Jonny <strong>Deen</strong></div>
-                            <div class="user-text-online">
-                                <span class="user-circle-online btn btn-success btn-circle "></span>&nbsp;Online
-                            </div>
-                        </div>
-                    </div>
-                    <!--end user image section-->
+                   <?php
+                            echo '<div class="user-section">';
+                                echo '<div class="user-section-inner">';
+                                    echo '<img src="assets/img/user.jpg" alt="">';
+                                echo '</div>';
+                                echo '<div class="user-info">';
+                                    echo '<div><strong>'.$row_user[2].'</strong></div>';
+                                    echo '<div class="user-text-online">';
+                                        echo '<span class="user-circle-online btn btn-success btn-circle "></span>&nbsp;Online';
+                                    echo '</div>';
+                                echo '</div>';
+                            echo '</div>';
+                    ?>
                 </li>
 
                 <li>
-                    <a href="#"><i class="fa fa-home fa-fw"></i>หน้าแรก</a>
+                    <a href="index.php"><i class="fa fa-home fa-fw"></i>
+                        หน้าแรก
+                        <?php 
+                            if(isset($_SESSION['user_id'])){
+                                $_SESSION['user_id'] = $row_user[0];
+                            }
+                        ?>
+                    </a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-calendar fa-fw"></i> ตารางการใช้ป้าย</a>
+                    <a href="list_revs_notice.php"><i class="fa fa-calendar fa-fw"></i> 
+                        ตารางการใช้ป้าย
+                        <?php 
+                            if(isset($_SESSION['user_id'])){
+                                $_SESSION['user_id'] = $row_user[0];
+                            }
+                        ?>
+                    </a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-lock fa-fw"></i> เข้าสู่ระบบ</a>
-                </li>
-
-                <li>
-                    <a href="#"><i class="fa fa-book fa-fw"></i>คู่มือการใช้งานระบบ</a>
-                </li>
-                <li class="selected">
-                    <a href="#"><i class="fa fa-table fa-fw"></i>แบบฟอร์มการจองป้าย</a>
+                    <a href="login.php"><i class="fa fa-lock fa-fw"></i> เข้าสู่ระบบ</a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-book fa-fw"></i> ผู้ดูแลระบบ<span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
-                        <li>
-                            <a href="manage_Res_Event.php">จัดการการจอง</a>
-                        </li>
-                        <li>
-                            <a href="manageNotice.php">เพิ่ม/ลบ/แก้ไขป้าย</a>
-                        </li>
-                        <li>
-                            <a href="editDoc.php">เพิ่ม/ลบ/แก้ไขเอกสาร</a>
-                        </li>
-                        <li>
-                            <a href="manageNews.php">เพิ่ม/แก้ไข/ลบ ประชาสัมพันธ์</a>
-                        </li>
-                        <li>
-                            <a href="#">สถิติ</a>
-                        </li>
-                    </ul>
-                    <!-- second-level-items -->
+                    <a href="Res_Notice.php"><i class="fa fa-table fa-fw"></i>แบบฟอร์มการจองป้าย</a>
                 </li>
+                <?php
+                    if(isset($_SESSION['status']) && $_SESSION['status'] != "user"){
+                        echo '<li>';
+                            echo '<a href="#"><i class="fa fa-book fa-fw"></i> ผู้ดูแลระบบ<span class="fa arrow"></span></a>';
+                            echo '<ul class="nav nav-second-level">';
+                                echo '<li>';
+                                    echo '<a href="#"><i class="fa fa-book fa-fw"></i>จัดการการจอง<span class="fa arrow"></span></a>';
+                                    echo '<ul class="nav nav-third-level">';
+                                        echo '<li>';
+                                            echo '<a href="manage_Res_Event.php">';
+                                                echo 'ยังไม่อนุมัติ';
+                                                $_SESSION['user_id'] = $row_user[0];
+                                            echo '</a>';
+                                        echo '</li>';
+                                        echo '<li>';
+                                            echo '<a href="manage_res_accept.php">';
+                                                echo 'อนุมัติแล้ว';
+                                                echo $_SESSION['user_id'] = $row_user[0];
+                                            echo '</a>';
+                                        echo '</li>';
+                                    echo '</ul>';
+                                echo '</li>';
+                                echo '<li>';
+                                    echo '<a href="manageNotice.php">';
+                                        echo 'เพิ่ม/ลบ/แก้ไขป้าย';
+                                        $_SESSION['user_id'] = $row_user[0];
+                                    echo '</a>';
+                                echo '</li>';
+                                echo '<li>';
+                                    echo '<a href="editDoc.php">';
+                                        echo 'เพิ่ม/ลบ/แก้ไขเอกสาร';
+                                        $_SESSION['user_id'] = $row_user[0];
+                                    echo '</a>';
+                                echo '</li>';
+                                echo '<li>';
+                                    echo '<a href="manageNews.php">';
+                                        echo 'เพิ่ม/แก้ไข/ลบ ประชาสัมพันธ์';
+                                          $_SESSION['user_id'] = $row_user[0];
+                                    echo '</a>';
+                                echo '</li>';
+                                echo '<li>';
+                                    echo '<a href="Manual.php">';
+                                        echo 'คู่มือการใช้งานระบบ';
+                                          $_SESSION['user_id'] = $row_user[0];
+                                    echo '</a>';
+                                echo '</li>';
+                            echo '</ul>';
+                        echo '</li>';
+                    }
+                ?>
             </ul>
             <!-- end side-menu -->
         </div>
@@ -138,7 +182,12 @@
             <div class="row">
                  <!-- page header -->
                 <div class="col-lg-12">
-                    <h1 class="page-header">แบบฟอร์มการจองป้าย</h1>
+                    <?php
+                        echo '<a href="Res_Notice.php"><i class="fa fa-table fa-fw"></i>';
+                            echo 'แบบฟอร์มการจองป้าย';
+                               $_SESSION['user_id'] = $row_user[0];
+                        echo '</a>';
+                    ?>
                 </div>
                 <!--end page header -->
             </div>

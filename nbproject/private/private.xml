@@ -5,16 +5,31 @@
             <url>manageNotice.php</url>
             <bookmark id="1">
                 <name/>
-                <line>160</line>
+                <line>184</line>
                 <key/>
             </bookmark>
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/xampp/htdocs/systemnotice/assets/plugins/fullcalendar/script.js</file>
+            <file>file:/C:/xampp/htdocs/systemnotice/editDoc.php</file>
+            <file>file:/C:/xampp/htdocs/systemnotice/edit_form.php</file>
+            <file>file:/C:/xampp/htdocs/systemnotice/Res_Form.php</file>
+            <file>file:/C:/xampp/htdocs/systemnotice/edit_form_user.php</file>
+            <file>file:/C:/xampp/htdocs/systemnotice/register.php</file>
+            <file>file:/C:/xampp/htdocs/systemnotice/manage_Res_Event.php</file>
+            <file>file:/C:/xampp/htdocs/systemnotice/list_event_user.php</file>
+            <file>file:/C:/xampp/htdocs/systemnotice/manageNotice.php</file>
+            <file>file:/C:/xampp/htdocs/systemnotice/Res_Notice.php</file>
+            <file>file:/C:/xampp/htdocs/systemnotice/edit_form_admin.php</file>
             <file>file:/C:/xampp/htdocs/systemnotice/event_data.php</file>
+            <file>file:/C:/xampp/htdocs/systemnotice/manageNews.php</file>
             <file>file:/C:/xampp/htdocs/systemnotice/list_revs_notice.php</file>
+            <file>file:/C:/xampp/htdocs/systemnotice/manageEvent.php</file>
+            <file>file:/C:/xampp/htdocs/systemnotice/Manual.php</file>
+            <file>file:/C:/xampp/htdocs/systemnotice/manage_res_accept.php</file>
+            <file>file:/C:/xampp/htdocs/systemnotice/Detail_event.php</file>
+            <file>file:/C:/xampp/htdocs/systemnotice/profile_user.php</file>
         </group>
     </open-files>
 </project-private>
