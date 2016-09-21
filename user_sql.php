@@ -6,30 +6,24 @@
    if($todo == "register"){
        $fName = $_POST['fname'];//
        $lName = $_POST['lname'];//
-       $Email = $_POST['email'];
-       $pass = $_POST['pass'];
-       $password = hash("sha256", $pass);
+       $user = $_POST['user'];
        $depart = $_POST['depart'];//
        $tel = $_POST['tel'];//
        $title = $_POST['title'];
        $status = "user";//
       
-       $sql_sel_user = "SELECT * FROM profile WHERE Email = '".$Email."'";
-       $query_user = $conn->query($sql_sel_user);
-       if(mysqli_num_rows($query_user)){
-           echo 'fail';
-       }else {
-            $sql_register_user = "INSERT INTO profile (title, user_fName, user_lName, Email, password, user_depart, user_tel, pro_status)"
-               ."VALUES ('".$title."', '".$fName."', '".$lName."', '".$Email."', '".$password."', '".$depart."', '".$tel."', '".$status."')";
+
+       $sql_register_user = "INSERT INTO profile (title, user_fName, user_lName, Username, user_depart, user_tel, pro_status)"
+               ."VALUES ('".$title."', '".$fName."', '".$lName."', '".$user."', '".$depart."', '".$tel."', '".$status."')";
        
             $result = $conn->query($sql_register_user);
 
              if($result){
-                 echo '<label style="color:#4CAF50;">สมัครสมาชิกสำเร็จ</label>';
+                 $_SESSION['user_id'] = $user;
              }else{
                  echo '<label style="color:red;">สมัครสมาชิกไม่สำเร็จ</label>';
             }   
-       }
+       
    }
    
    // login
@@ -88,7 +82,6 @@
        $user_id = $_POST['user_id'];
        $fName = $_POST['fname'];//
        $lName = $_POST['lname'];//
-       $Email = $_POST['email'];
        $depart = $_POST['depart'];//
        $tel = $_POST['tel'];//
        $title = $_POST['title'];
@@ -96,8 +89,8 @@
        
 //       print_r($id);
 //       echo $id.' '.$fname.' '.$lname.' '.$depart.' '.$tel;
-       $sql_update = "UPDATE profile SET title='".$title."', user_fName='".$fName."', user_lName='".$lName."', "
-               . "Email='".$Email."', user_depart='".$depart."', user_tel='".$tel."' WHERE user_id = ".$user_id;
+       $sql_update = "UPDATE profile SET title='".$title."', user_fName='".$fName."', user_lName='".$lName."'"
+               .", user_depart='".$depart."', user_tel='".$tel."' WHERE user_id = ".$user_id;
 //       $sql_update = "UPDATE profile SET user_fName='".$fname."', user_lName='".$lname."', user_depart='".$depart."', user_tel='".$tel."' WHERE user_id = ".$id;
 //       
        $result = $conn->query($sql_update);

@@ -1,5 +1,9 @@
 <?php
  include "conn.php";
+ session_start();
+ if(isset($_SESSION['user_id'])){
+     $user = $_SESSION['user_id'];
+ }
 ?>
 
 <!DOCTYPE html>
@@ -7,7 +11,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bootsrtap Free Admin Template - SIMINTA | Admin Dashboad Template</title>
+    <title>กรอกข้อมูลผู้ใช้</title>
     <!-- Core CSS - Include with every page -->
     <link href="assets/plugins/bootstrap/bootstrap.css" rel="stylesheet"/>
     <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet"/>
@@ -102,47 +106,38 @@
                            สมัครสมาชิก
                         </div>
                         <div class="panel-body">
-                                    <form class="form-horizontal" role="form">
+                            <form class="form-horizontal" role="form" onsubmit="return checkEmptyInput()" action="sql_register.php?todo=insert" method="POST">
+                                        <div class="form-group">
+                                            <label for="firstName" class="col-sm-2 control-label">Username</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" id="username" name="username" placeholder="ชื่อ" class="form-control" autofocus readonly value="<?php echo $user?>">
+                                            </div>
+                                        </div>
                                         <div class="form-group">
                                             <label for="firstName" class="col-sm-2 control-label">ชื่อ</label>
                                             <div class="col-sm-9">
-                                                <input type="text" id="firstName" placeholder="ชื่อ" class="form-control" autofocus>
+                                                <input type="text" id="firstName" placeholder="ชื่อ" class="form-control" autofocus name="firstName">
                                                 <span class="help-block" id="NotiFname"></span>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="firstName" class="col-sm-2 control-label">นามสกุล</label>
                                             <div class="col-sm-9">
-                                                <input type="text" id="lastName" placeholder="นามสกุล" class="form-control" autofocus>
+                                                <input type="text" id="lastName" placeholder="นามสกุล" class="form-control" autofocus name="lastName">
                                                 <span class="help-block" id="NotiLname"></span>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="email" class="col-sm-2 control-label">Email</label>
+                                            <label for="birthDate" class="col-sm-2 control-label" >หน่วยงาน/คณะ</label>
                                             <div class="col-sm-9">
-                                                <input type="email" id="email" placeholder="Email" class="form-control">
-                                                <span class="help-block" id="NotiEmail"></span>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="password" class="col-sm-2 control-label">Password</label>
-                                            <div class="col-sm-9">
-                                                <input type="password" id="password" placeholder="Password" class="form-control">
-                                                <span class="help-block">ความยาวอย่างน้อย 6 ไม่เกิน 14 ตัวอักษร ประกอบด้วย a - z, 0 - 9, A - Z</span>
-                                                <span class="help-block" id="NotiPass"></span>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="birthDate" class="col-sm-2 control-label">หน่วยงาน/คณะ</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" id="depart" class="form-control">
+                                                <input type="text" id="depart" class="form-control" name="depart">
                                                 <span class="help-block" id="NotDepart"></span>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="birthDate" class="col-sm-2 control-label">เบอร์โทรติดต่อ</label>
                                             <div class="col-sm-9">
-                                                <input type="text" id="tel" class="form-control">
+                                                <input type="text" id="tel" class="form-control" name="tel">
                                                 <span class="help-block" id="NotiTel"></span>
                                             </div>
                                         </div>
@@ -172,7 +167,7 @@
 
                                         <div class="form-group">
                                             <div class="col-sm-9 col-sm-offset-2">
-                                                <button type="button" class="btn btn-primary btn-block" onclick="checkEmptyInput()">สมัครสมาชิก</button>
+                                                <button type="submit" class="btn btn-primary btn-block" >บันทึก</button>
                                                  <span class="help-block" id="data"></span>
                                             </div>
                                         </div>
@@ -204,10 +199,9 @@
 <script type="text/javascript">
 
     function checkEmptyInput(){
+       var username = document.getElementById("username").value
        var fName = document.getElementById("firstName").value;
        var LName = document.getElementById("lastName").value;
-       var Email = document.getElementById("email").value;
-       var Pass = document.getElementById("password").value;
        var depart = document.getElementById("depart").value;
        var tel = document.getElementById("tel").value;
        var title;
@@ -215,27 +209,7 @@
        var chRadio = false;
        var chEmail = false;
        
-       if(Email != ""){
-            if(validateEmail(Email)){
-                chEmail = true;
-            }else{
-              document.getElementById("email").focus();
-              document.getElementById("NotiEmail").innerHTML = "*Email ไม่ถูกต้อง";
-              document.getElementById("NotiEmail").style.color = "red";   
-            }
-        }
-        
-        if(Pass != ""){
-            if(checkPassword(Pass)){
-                chPass = true;
-            }else{
-                if(Pass.length > 16 || Pass.length < 16){
-                    document.getElementById("password").focus();
-                    document.getElementById("NotiPass").innerHTML = "*ความยาวของ password อยู่ระหว่าง 6 - 14";
-                    document.getElementById("NotiPass").style.color = "red";  
-                }
-            }
-        }
+       
         
         chRadio = checkEmptyRadio();
        
@@ -244,90 +218,34 @@
               document.getElementById("firstName").focus();
               document.getElementById("NotiFname").innerHTML = "*กรุณากรอกชื่อ";
               document.getElementById("NotiFname").style.color = "red";
+              return false;
         }else if(LName == ""){
               document.getElementById("lastName").focus();
               document.getElementById("NotiLname").innerHTML = "*กรุณากรอกนามสกุล";
               document.getElementById("NotiLname").style.color = "red";
-        }else if(Email == ""){
-              document.getElementById("email").focus();
-              document.getElementById("NotiEmail").innerHTML = "*กรุณากรอก Email";
-              document.getElementById("NotiEmail").style.color = "red";              
-        }else if(Pass == ""){
-              document.getElementById("password").focus();
-              document.getElementById("NotiPass").innerHTML = "*กรุณากรอกรหัสผ่าน";
-              document.getElementById("NotiPass").style.color = "red";              
+              return false;
         }else if(depart == ""){
               document.getElementById("depart").focus();
               document.getElementById("NotDepart").innerHTML = "*กรุณากรอก หน่วยงาน หรือ คณะ";
-              document.getElementById("NotDepart").style.color = "red";              
+              document.getElementById("NotDepart").style.color = "red"; 
+              return false;
         }else if(tel == ""){
               document.getElementById("tel").focus();
               document.getElementById("NotiTel").innerHTML = "*กรุณากรอก เบอร์โทร";
               document.getElementById("NotiTel").style.color = "red";
-        }else{
-            if(chEmail == true && chPass == true &&  chRadio == true){
-                var radio = document.getElementsByName("titleRadio");
-                for (var i = 0, length = radio.length; i < length; i++) {
-                    if (radio[i].checked) {
-                        title = radio[i].value;
-                        break;
-                    }
-                }
-                $.ajax({
-                    url: 'user_sql.php',
-                    type: 'post',
-                    data: {
-                        todo : "register",
-                        fname : fName,
-                        lname : LName,
-                        email : Email,
-                        pass : Pass,
-                        depart : depart,
-                        tel : tel,
-                        title : title
-                    },
-                    success: function (data) {
-                        if(data.length == 5){
-                           document.getElementById("data").innerHTML = "Email นี้มีอยู่ในระบบแล้วกรุณาตรวจสอบ";
-                           document.getElementById("data").style.color = "red";  
-                        setTimeout(function () {
-                            window.location.href = "register.php"; //will redirect to your blog page (an ex: blog.html)
-                        }, 2000); //will call the function after 2 secs.
-                       }else{
-                           window.location.href = "login.php";
-                       }
-//                        alert(data.length);
-//                        window.location.href = "login.php";
-                   }
-               });
-            }
+              return false;
+        }else if(chRadio == false){
+              document.getElementById("NotiTitle").innerHTML = "*กรุณาเลือกคำนำหน้าชื่อ";
+              document.getElementById("NotiTitle").style.color = "red";
+              return false
         }
     }
-    
-    
-    function callAjax(method, value, target)
-    {
-      if(encodeURIComponent) {
-        var req = new AjaxRequest();
-        var params = "method=" + method + "&value=" + encodeURIComponent(value) + "&target=" + target;
-        req.setMethod("POST");
-        req.loadXMLDoc('/scripts/validate.php', params);
-      }
-    }
-
-    
-    function validateEmail(email) {
-        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(email);
-    }
-    
+     
     function checkEmptyRadio(){
         var flag = true;
         $(':radio').each(function () {
             name = $(this).attr('name');
             if (flag && !$(':radio[name="' + name + '"]:checked').length) {
-                document.getElementById("NotiTitle").innerHTML = "*กรุณาเลือกคำนำหน้าชื่อ";
-                document.getElementById("NotiTitle").style.color = "red";
                 flag = false;
             }
         });
@@ -335,10 +253,7 @@
         return flag;
     }
     
-    function checkPassword(password){
-        var re = /^[a-zA-Z0-9]{6,14}$/;
-        return re.test(password);
-    }
+   
 </script>
 
 </html>

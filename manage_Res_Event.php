@@ -167,6 +167,12 @@
                                     echo '</a>';
                                 echo '</li>';
                                 echo '<li>';
+                                    echo '<a href="Stat.php">';
+                                        $_SESSION['user_id'] = $row_user[0];
+                                        echo 'สรุปการจองป้าย';
+                                    echo '</a>';
+                                echo '</li>';
+                                echo '<li>';
                                     echo '<a href="Manual.php">';
                                         echo 'คู่มือการใช้งานระบบ';
                                           $_SESSION['user_id'] = $row_user[0];
@@ -286,7 +292,7 @@
                                                         echo '<a href="Detail_event.php?eId='.$rows[0].'" alt="รายละเอียด" title="รายละเอียด">'.$rows[3].'<br>';
                                                         if($rows[10] < date('Y-m-d', strtotime('-3 days'))){
                                                             echo '<label style="color:red;">*ป้ายเลยกำหนดเวลาการยืนเอกสาร</label>';
-                                                            $sql_update_event = "update event set status='time out' where eId = ".$rows[0];
+                                                            $sql_update_event = "update event set status='timeup' where eId = ".$rows[0];
                                                             $result_update = $conn->query($sql_update_event);
                                                         }
                                                     echo '</td>';

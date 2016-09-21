@@ -184,6 +184,12 @@ if(isset($_GET['eId'])){
                                     echo '</a>';
                                 echo '</li>';
                                 echo '<li>';
+                                    echo '<a href="Stat.php">';
+                                        $_SESSION['user_id'] = $row_user[0];
+                                        echo 'สรุปการจองป้าย';
+                                    echo '</a>';
+                                echo '</li>';
+                                echo '<li>';
                                     echo '<a href="Manual.php">';
                                         echo 'คู่มือการใช้งานระบบ';
                                           $_SESSION['user_id'] = $row_user[0];

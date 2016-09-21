@@ -124,6 +124,7 @@
                 <li>
                     <a href="login.php"><i class="fa fa-lock fa-fw"></i> เข้าสู่ระบบ</a>
                 </li>
+                <li>
                     <?php
                         echo '<a href="Res_Notice.php"><i class="fa fa-table fa-fw"></i>';
                             echo 'แบบฟอร์มการจองป้าย';
@@ -169,6 +170,12 @@
                                     echo '<a href="manageNews.php">';
                                         echo 'เพิ่ม/แก้ไข/ลบ ประชาสัมพันธ์';
                                           $_SESSION['user_id'] = $row_user[0];
+                                    echo '</a>';
+                                echo '</li>';
+                                echo '<li>';
+                                    echo '<a href="Stat.php">';
+                                        $_SESSION['user_id'] = $row_user[0];
+                                        echo 'สรุปการจองป้าย';
                                     echo '</a>';
                                 echo '</li>';
                                 echo '<li>';

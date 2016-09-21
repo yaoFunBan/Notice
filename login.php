@@ -34,21 +34,18 @@
                         <h3 class="panel-title col-md-offset-4">กรุณาเข้าสู่ระบบ</h3>
                     </div>
                     <div class="panel-body">
-                        <form role="form" action="assets/Auth/LdapConn.php" method="POST">
+                        <form role="form" action="LdapConn.php" method="POST">
                             <fieldset>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Email" name="user" id="username" class="username" type="text" autofocus>
+                                    <input class="form-control" placeholder="Username" name="Login[Username]" id="username" class="username" type="text" autofocus>
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Password" name="password" id="password" type="password" value="">
+                                    <input class="form-control" placeholder="Password"  name="Login[Password]" id="password" type="password" value="">
                                 </div>
                                 <div class="form-group">
-                                    <button class="btn btn-lg btn-success btn-block" type="button" onclick="login()">Login</button>
+                                    <button class="btn btn-lg btn-success btn-block" type="submit">Login</button>
                                 </div>
-                                <div class="form-group">
-                                    <button class="btn btn-lg btn-outline btn-primary btn-block" type="button" onclick="window.location.href='register.php'">สมัครสมาชิก</button>
-                                </div>
-                                <label style="text-align: center; color: red">ผู้ใช้จะต้องทำการสมัครสมาชิกก่อน</label>
+                                <label style="text-align: center; color: red">การเข้าสู่ระบบใช้รหัสเดียวกันกับการใช้งานอินเตอร์เน็ต</label>
                             </fieldset>
                              <div id="show"></div>
                         </form>
@@ -80,7 +77,7 @@
                         status = data+"";
                         if(status.length == 6){
                             document.getElementById("show").innerHTML = "Email ผิดหรือ รหัสผู้ใช้ผิดกรุณาตรวจสอบ";
-                             document.getElementById("show").style.color = "red";   
+                            document.getElementById("show").style.color = "red";   
                         }else{
 //                            document.getElementById("show").innerHTML = data;  
                             window.location.href = "index.php";

@@ -52,6 +52,7 @@
             </a>
         </div>
         <?php 
+            if($inheader){
                 echo '<ul class="nav navbar-top-links navbar-right">';
                     echo '<li class="dropdown">';
                         echo '<a class="dropdown-toggle" data-toggle="dropdown" href="#">';
@@ -63,10 +64,7 @@
                                 echo 'โปรไฟล์';
                                 $_SESSION['user_id'] = $row_user[0];
                             echo '</a></li>';
-                            echo '<li><a href="list_event_user.php"><i class="fa fa-gear fa-fw"></i>';
-                                echo 'รายการจองป้าย';
-                                $_SESSION['user_id'] = $row_user[0];
-                            echo '</a>';
+                            echo '<li><a href="list_event_user.php?userId="'.$row_user[0].'"><i class="fa fa-gear fa-fw"></i>รายการจองป้าย</a>';
                             echo '</li>';
                             echo '<li class="divider"></li>';
                             echo '<li><a href="logout.php"><i class="fa fa-sign-out fa-fw"></i>Logout</a>';
@@ -75,8 +73,9 @@
 //                        <!-- end dropdown-user -->
                     echo '</li>';
 //                    <!-- end main dropdown -->
-            echo '</ul>';
+                echo '</ul>';
 //        <!-- end navbar-top-links -->
+            }
         ?>
     </nav>
     <!-- end navbar top -->
@@ -128,12 +127,14 @@
                     <?php
                         echo '<a href="Res_Notice.php"><i class="fa fa-table fa-fw"></i>';
                             echo 'แบบฟอร์มการจองป้าย';
-                               $_SESSION['user_id'] = $row_user[0];
+                            if ($inheader){
+                                 $_SESSION['user_id'] = $row_user[0];
+                            }
                         echo '</a>';
                     ?>
                 </li>
                 <?php
-                    if($row_user[8] != "user"){
+                    if(isset($_SESSION['status']) && $_SESSION['status'] != "user"){
                         echo '<li>';
                             echo '<a href="#"><i class="fa fa-book fa-fw"></i> ผู้ดูแลระบบ<span class="fa arrow"></span></a>';
                             echo '<ul class="nav nav-second-level">';
@@ -156,6 +157,12 @@
                                 echo '</li>';
                                 echo '<li>';
                                     echo '<a href="manageNews.php">เพิ่ม/แก้ไข/ลบ ประชาสัมพันธ์</a>';
+                                echo '</li>';
+                                echo '<li>';
+                                    echo '<a href="Stat.php">';
+                                        $_SESSION['user_id'] = $row_user[0];
+                                        echo 'สรุปการจองป้าย';
+                                    echo '</a>';
                                 echo '</li>';
                                 echo '<li>';
                                     echo '<a href="Manual.php">';
@@ -212,6 +219,21 @@
                                                 }
                                             ?>
                                         </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-9 col-sm-offset-2">
+                                            <a href="Res_Notice.php">
+                                                <button type="button" class="btn btn-primary btn-block" >
+                                                    กรอกแบบฟอร์มการจองป้าย
+                                                        <?php
+                                                            if ($inheader){
+                                                                 $_SESSION['user_id'] = $row_user[0];
+                                                            }
+                                                        ?>
+                                                </button>
+                                            </a>
+                                            <span class="help-block" id="data"></span>
+                                        </div>
                                     </div>
                                 </form>
                             </div>

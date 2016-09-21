@@ -228,7 +228,8 @@
                                            
                                             function DateDiff($strDate1,$strDate2)
                                             {
-                                                return (strtotime($strDate2) - strtotime($strDate1))/  ( 60 * 60 * 24 );  // 1 day = 60*60*24
+                                                $interval = (strtotime($strDate2) - strtotime($strDate1))/  ( 60 * 60 * 24 );  // 1 day = 60*60*24 
+                                                return intval($interval);
                                             }
                                         ?>
             <div class="form-group">
@@ -241,7 +242,7 @@
             <div class="form-group">
                 <span id="hStory">โดยจะทำการรื้อถอนให้แล้วเสร็จใน </span> <label>วันที่.......<?php echo $Oday;?>.......เดือน..........<?php echo chageMount($Omonth);?>..........พ.ศ.......<?php echo changeYear($Oyear)?>.......</label>
             </div>
-            <div class="form-group">                                            
+            <div class="form-group">
                 <label>
                     รวมระยะเวลาขอติดตั้ง.....<?php  echo DateDiff($row_event[4],$row_event[5])?>.....วัน
                 </label>

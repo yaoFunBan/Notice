@@ -1,12 +1,14 @@
 <?php
  include "conn.php";
+ 
  session_start();
  if(isset($_SESSION['user_id'])){
+     
      $userId = $_SESSION['user_id'];
      
      $sql_sel_user = "SELECT * FROM profile WHERE user_id = ".$userId;
      $result = $conn->query($sql_sel_user);
-     $row_user = $result->fetch_array();  
+     $row_user = $result->fetch_array();     
  }else{
      header("Location: login.php");
  }
@@ -17,7 +19,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bootsrtap Free Admin Template - SIMINTA | Admin Dashboad Template</title>
+    <title>สรุปการจองป้าย</title>
     <!-- Core CSS - Include with every page -->
     <link href="assets/plugins/bootstrap/bootstrap.css" rel="stylesheet" />
     <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
@@ -58,9 +60,7 @@
                                 echo 'โปรไฟล์';
                                 $_SESSION['user_id'] = $row_user[0];
                             echo '</a></li>';
-                            echo '<li><a href="#"><i class="fa fa-gear fa-fw"></i>';
-                                echo 'รายการจองป้าย';
-                            echo '</a>';
+                            echo '<li><a href="list_event_user.php?userId="'.$row_user[0].'"><i class="fa fa-gear fa-fw"></i>รายการจองป้าย</a>';
                             echo '</li>';
                             echo '<li class="divider"></li>';
                             echo '<li><a href="logout.php"><i class="fa fa-sign-out fa-fw"></i>Logout</a>';
@@ -72,6 +72,7 @@
             echo '</ul>';
 //        <!-- end navbar-top-links -->
         ?>
+
     </nav>
     <!-- end navbar top -->
 
@@ -82,18 +83,18 @@
             <!-- side-menu -->
             <ul class="nav" id="side-menu">
                 <li>
-                    <?php
-                        echo '<div class="user-section">';
-                            echo '<div class="user-section-inner">';
-                                echo '<img src="assets/img/user.jpg" alt="">';
-                            echo '</div>';
-                            echo '<div class="user-info">';
-                                echo '<div><strong>'.$row_user[2].'</strong></div>';
-                                echo '<div class="user-text-online">';
-                                    echo '<span class="user-circle-online btn btn-success btn-circle "></span>&nbsp;Online';
+                <?php
+                            echo '<div class="user-section">';
+                                echo '<div class="user-section-inner">';
+                                    echo '<img src="assets/img/user.jpg" alt="">';
+                                echo '</div>';
+                                echo '<div class="user-info">';
+                                    echo '<div><strong>'.$row_user[2].'</strong></div>';
+                                    echo '<div class="user-text-online">';
+                                        echo '<span class="user-circle-online btn btn-success btn-circle "></span>&nbsp;Online';
+                                    echo '</div>';
                                 echo '</div>';
                             echo '</div>';
-                        echo '</div>';
                     ?>
                 </li>
 
@@ -118,7 +119,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="login.php"><i class="fa fa-lock fa-fw"></i> เข้าสู่ระบบ</a>
+                    <a href="#"><i class="fa fa-lock fa-fw"></i> เข้าสู่ระบบ</a>
                 </li>
                 <li>
                     <?php
@@ -129,11 +130,11 @@
                     ?>
                 </li>
                 <?php
-                    if(isset($_SESSION['status']) && $_SESSION['status'] != "user"){
-                        echo '<li>';
+                    if($row_user[8] != "user"){
+                        echo '<li class="active">';
                             echo '<a href="#"><i class="fa fa-book fa-fw"></i> ผู้ดูแลระบบ<span class="fa arrow"></span></a>';
                             echo '<ul class="nav nav-second-level">';
-                                echo '<li>';
+                                echo '<li class="active">';
                                     echo '<a href="#"><i class="fa fa-book fa-fw"></i>จัดการการจอง<span class="fa arrow"></span></a>';
                                     echo '<ul class="nav nav-third-level">';
                                         echo '<li>';
@@ -143,10 +144,7 @@
                                             echo '</a>';
                                         echo '</li>';
                                         echo '<li>';
-                                            echo '<a href="manage_res_accept.php">';
-                                                echo 'อนุมัติแล้ว';
-                                                echo $_SESSION['user_id'] = $row_user[0];
-                                            echo '</a>';
+                                            echo '<a href="#.php">อนุมัติแล้ว</a>';
                                         echo '</li>';
                                     echo '</ul>';
                                 echo '</li>';
@@ -157,8 +155,9 @@
                                     echo '</a>';
                                 echo '</li>';
                                 echo '<li>';
-                                    echo '<a href="#">';
+                                    echo '<a href="editDoc.php">';
                                         echo 'เพิ่ม/ลบ/แก้ไขเอกสาร';
+                                        $_SESSION['user_id'] = $row_user[0];
                                     echo '</a>';
                                 echo '</li>';
                                 echo '<li>';
@@ -167,9 +166,8 @@
                                           $_SESSION['user_id'] = $row_user[0];
                                     echo '</a>';
                                 echo '</li>';
-                                echo '<li>';
-                                    echo '<a href="Stat.php">';
-                                        $_SESSION['user_id'] = $row_user[0];
+                                echo '<li class="selected">';
+                                    echo '<a href="#">';
                                         echo 'สรุปการจองป้าย';
                                     echo '</a>';
                                 echo '</li>';
@@ -193,7 +191,7 @@
         <div class="row">
             <!-- page header -->
             <div class="col-lg-12">
-                <h1 class="page-header">รายการการจองป้าย</h1>
+                <h1 class="page-header">สรุปการจองป้าย</h1>
             </div>
                 <!--end page header -->
         </div>
@@ -202,7 +200,7 @@
             <!-- Advanced Tables -->
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                             รายการการจองป้าย 
+                             สรุปการจองป้าย
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
@@ -217,12 +215,11 @@
                                     <thead>
                                         <tr>
                                             <th>ชื่อกิจกรรม</th>
-                                            <th>ป้ายที่จอง</th>
+                                            <th>ป้ายที่จอง/วันที่เริ่มจอง</th>
                                             <th>วันเริ่มติดตั้ง</th>
                                             <th>วันสุดท้าย</th>
                                             <th>วันรื้อถอนป้าย</th>
                                             <th>สถานะ</th>
-                                            <th></th>
                                         </tr>
                                     </thead>
                                     
@@ -280,22 +277,19 @@
                                     ?>
                                     <tbody>
                                         <?php
-                                            $sql_sel_event = "SELECT * FROM event WHERE user_id = ".$userId;
+                                            $sql_sel_event = "SELECT * FROM event";
                                             $result = $conn->query($sql_sel_event);
                                             while ($rows = $result->fetch_array()){
                                             list($Syear, $Smonth, $Sday) = split("-", $rows[4]);
                                             list($Eyear, $Emonth, $Eday) = split("-", $rows[5]);
                                             list($Oyear, $Omonth, $Oday) = split("-", $rows[6]);
                                             list($Nyear, $Nmonth, $Nday) = split("-", $rows[10]);
-                                            $time_out = FALSE;
+                                            
                                                 echo '<tr class="odd gradeX">';
                                                     echo '<td>';
-                                                        echo '<a href="Detail_event.php?eId='.$rows[0].'&userid='.$rows[1].'" alt="รายละเอียด" title="รายละเอียด">'.$rows[3];
-                                                        if($rows[10] < date('Y-m-d', strtotime('-3 days'))){
+                                                        echo '<a href="Detail_event.php?eId='.$rows[0].'" alt="รายละเอียด" title="รายละเอียด">'.$rows[3].'<br>';
+                                                        if($rows[9] == "timeup"){
                                                             echo '<label style="color:red;">*ป้ายเลยกำหนดเวลาการยืนเอกสาร</label>';
-                                                             $sql_update_event = "update event set status='time out' where eId = ".$rows[0];
-                                                            $result_update = $conn->query($sql_update_event);
-                                                            $time_out = TRUE;
                                                         }
                                                     echo '</td>';
                                                     echo '<td>';
@@ -308,17 +302,7 @@
                                                     echo '<td>'.$Eday.' '.change_mount($Emonth).' '.changeYear($Eyear).'</td>';
                                                     echo '<td>'.$Oday.' '.change_mount($Omonth).' '.changeYear($Oyear).'</td>';
                                                     echo '<td>'.$rows[9].'</td>';
-                                                    echo '<td>';
-                                                        echo '<a href="edit_form_user.php?eId='.$rows[0].'&userId='.$rows[1].'"><button class="btn btn-outline btn-primary" type="button" style="margin:5px;">แก้ไข</button></a><br>';
-                                                        if(!$time_out == TRUE){
-                                                           echo '<a href="print_form.php?eId='.$rows[0].'">';
-                                                              echo '<button class="btn btn-outline btn-success" type="button" style="margin:5px;" >แบบฟอร์มการจอง</button>';
-                                                            echo '</a><br>'; 
-                                                        }else{
-                                                             echo '<button class="btn btn-default disabled" type="button" style="margin:5px;">แบบฟอร์มการจอง</button>';
-                                                        }
-                                                        echo '<button class="btn btn-outline btn-danger" type="button" style="margin:5px;" onclick="del_event('.$rows[0].')">ลบ</button>';
-                                                    echo '</td>';
+                                                  
                                                 echo '</tr>';
                                             }
                                         ?>
@@ -350,15 +334,36 @@ $(document).ready(function () {
 });
 </script>
 
-<script>
-    function del_event(eId){
+<script type="text/javascript">
+    
+    function update_status_accept(eId){
+        var status = "accept";
 //        alert(eId);
         $.ajax({
-           url: 'user_sql.php',
+           url: 'admin_manage_event.php',
            type: 'POST',
            data: {
                 eId : eId,
-                todo : "del_event"
+                status : status,
+                todo : "accept"
+           },
+           success: function (data, textStatus, jqXHR) {
+            document.getElementById("show").innerHTML = data;
+            location.reload();
+           }
+        });
+    }
+    
+    function update_status_unaccept(eId){
+        var status = "unaccept";
+//        alert(eId);
+        $.ajax({
+           url: 'admin_manage_event.php',
+           type: 'POST',
+           data: {
+                eId : eId,
+                status : status,
+                todo : "unaccept"
            },
            success: function (data, textStatus, jqXHR) {
             document.getElementById("show").innerHTML = data;
@@ -367,8 +372,6 @@ $(document).ready(function () {
         });
     }
 </script>
-
-
 </body>
 
 </html>

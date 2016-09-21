@@ -109,6 +109,7 @@
                         หน้าแรก
                         <?php 
                             if(isset($_SESSION['user_id'])){
+                                echo $row_user[0];
                                 $_SESSION['user_id'] = $row_user[0];
                             }
                         ?>
@@ -175,6 +176,12 @@
                                     echo '</a>';
                                 echo '</li>';
                                 echo '<li>';
+                                    echo '<a href="Stat.php">';
+                                        $_SESSION['user_id'] = $row_user[0];
+                                        echo 'สรุปการจองป้าย';
+                                    echo '</a>';
+                                echo '</li>';
+                                echo '<li>';
                                     echo '<a href="Manual.php">';
                                         echo 'คู่มือการใช้งานระบบ';
                                           $_SESSION['user_id'] = $row_user[0];
@@ -229,23 +236,16 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="email" class="col-sm-2 control-label">Email</label>
-                                            <div class="col-sm-9">
-                                                <input type="email" id="email" placeholder="Email" class="form-control" value="<?php echo $rows[4]?>">
-                                                <span class="help-block" id="NotiEmail"></span>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
                                             <label for="birthDate" class="col-sm-2 control-label">หน่วยงาน/คณะ</label>
                                             <div class="col-sm-9">
-                                                <input type="text" id="depart" class="form-control" value="<?php echo $rows[6]?>">
+                                                <input type="text" id="depart" class="form-control" value="<?php echo $rows[5]?>">
                                                 <span class="help-block" id="NotDepart"></span>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="birthDate" class="col-sm-2 control-label">เบอร์โทรติดต่อ</label>
                                             <div class="col-sm-9">
-                                                <input type="text" id="tel" class="form-control" value="<?php echo $rows[7]?>">
+                                                <input type="text" id="tel" class="form-control" value="<?php echo $rows[6]?>">
                                                 <span class="help-block" id="NotiTel"></span>
                                             </div>
                                         </div>
@@ -307,7 +307,6 @@
     function edit_profile(user_id){
         var fname = $("#firstName").val();
         var lname = $("#lastName").val();
-        var email = $("#email").val();
         var depart = $("#depart").val();
         var tel = $("#tel").val();
         var title = $("#luser").val(); 
@@ -327,7 +326,6 @@
                 todo : "edit_user",
                 fname: fname,
                 lname: lname,
-                email: email,
                 depart: depart,
                 tel: tel,
                 title: title
